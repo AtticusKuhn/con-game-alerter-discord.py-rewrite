@@ -47,7 +47,13 @@ class Basic(commands.Cog):
             command=command[0]
             return await ctx.send(embed=simple_embed(True,f'name: {command.name}\n description:{command.description}\n aliases:{", ".join(command.aliases)}'))
         return await ctx.send(embed=simple_embed(False,"can't find command"))
-
+    @commands.command(
+        name='invite',
+        description='invite this bot to your server',
+        aliases=['inv', 'invitelink']
+    )
+    async def invite(self, ctx):
+        await ctx.send(embed=simple_embed(True,"invite this bot with https://discord.com/oauth2/authorize?client_id=698691997279584338&permissions=117824&scope=bot"))
 
 
 def setup(bot):

@@ -1,4 +1,6 @@
 from discord.ext import commands
+from datetime import datetime
+import time
 
 import discord_utils.embeds as embeds
 from scraper.request_game import request_game
@@ -26,6 +28,15 @@ class Request_game(commands.Cog):
                 break
         if not found:
             return await ctx.send(embed=embeds.simple_embed(False,"cannot find that country"))
+        del player["@c"]
+        if "lastLogin" in player:
+            if player["lastLogin"]!=0:
+                if( player["lastLogin"] > time.time()):
+                    excess_time = player["lastLogin"]-time.time()
+                    excess_time = excess_time/3
+                    start_date = time.time()-excess_time
+                    player["lastLogin"] = start_date+excess_time
+                player["lastLogin"] = datetime.fromtimestamp(player["lastLogin"]).strftime('%Y-%m-%d %H:%M:%S')
         return await ctx.send(embed=embeds.dict_to_embed(found_player))
 
 def setup(bot):

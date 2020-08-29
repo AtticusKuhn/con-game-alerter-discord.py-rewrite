@@ -14,7 +14,7 @@ class Units(commands.Cog):
         aliases=['u'],
         usage="u 0 Motorized Infantry"
     )
-    async def info_conutry(self, ctx,level:int=0,  *unit_name:str):
+    async def info_country(self, ctx,level:int=0,  *unit_name:str):
         unit_name = " ".join(unit_name)
         print(unit_name,level)
         with open('data/units.json') as json_file:

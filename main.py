@@ -28,6 +28,6 @@ async def on_command_error(ctx,error):
     await command_error(ctx, error)
 
 keep_alive.keep_alive()# Start the server
-token=os.environ.get('token')
+token=os.environ.get('DISCORD_BOT_SECRET')
 bot.run(token)# Finally, login the bot
 
