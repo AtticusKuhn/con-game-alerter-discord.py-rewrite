@@ -24,6 +24,9 @@ class Units(commands.Cog):
                 return await ctx.send(embed=embeds.simple_embed(False,"cannot find unit"))
             found_unit = found_units[0]
             del found_unit["@c"]
+            del found_unit["statsColumnID"]
+            del found_unit["camouflage"]
+            del found_unit["unitPack"]
             if "buildTime" in found_unit:
                 found_unit["buildTime"]= str(seconds_to_time(int(found_unit["buildTime"])))
                 print("buildtime is now",found_unit["buildTime"] )

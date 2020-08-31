@@ -10,7 +10,7 @@ class Request_game(commands.Cog):
         self.bot = bot
     
     @commands.command(
-        name='info_conutry',
+        name='info_country',
         description='see when a player last logged on',
         aliases=['infc'],
         usage="infc 3320203 Sweden"
@@ -20,8 +20,11 @@ class Request_game(commands.Cog):
         if "players" not in result:
             return await ctx.send(embed=embeds.simple_embed(False,"cannot find that id")) 
         players = result["players"]
+        print("Players",players)
         found=False
         for number, player in players.items():
+            print("number",number)
+            print("player",player)
             if player["name"] == country or player["nationName"]==country:
                 found=True
                 found_player=player
@@ -37,7 +40,7 @@ class Request_game(commands.Cog):
                     start_date = time.time()-excess_time
                     player["lastLogin"] = start_date+excess_time
                 player["lastLogin"] = datetime.fromtimestamp(player["lastLogin"]).strftime('%Y-%m-%d %H:%M:%S')
-        return await ctx.send(embed=embeds.dict_to_embed(found_player))
+        return await ctx.send(embed=embeds.dict_to_embed(found_player,f'https://www.conflictnations.com/clients/con-client/con-client_live/images/flags/countryFlagsByName/big_{found_player["nationName"].lower().replace(" ","_")}.png?'))
 
 def setup(bot):
     bot.add_cog(Request_game(bot))
