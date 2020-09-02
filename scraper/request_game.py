@@ -127,7 +127,7 @@ async def get_global_games():
     driver = webdriver.Chrome(options=chrome_options)
     driver.get("https://www.duckduckgo.com")
     hash_code=sha1(f'uberCongetInternationalGamesnumEntriesPerPage=10&page=1&lang=en&isFilterSearch=false&openSlots=1&global=1&authTstamp=1598803665&authUserID=19999486{auth_code}'.encode('utf-8')).hexdigest()
-    print("the hash is", hash_code)
+    #print("the hash is", hash_code)
     execute_string = '''
         function post(path, params, method='post') {
             const form = document.createElement('form');
@@ -147,9 +147,10 @@ async def get_global_games():
         }
         post("https://www.conflictnations.com/index.php?eID=api&key=uberCon&action=getInternationalGames&hash='''+hash_code+'''&outputFormat=json&apiVersion=20141208",{data:btoa("numEntriesPerPage=10&page=1&lang=en&isFilterSearch=false&openSlots=1&global=1&authTstamp=1598803665&authUserID=19999486")})
     '''
-    print("execute_string is", execute_string)
+    #print("execute_string is", execute_string)
     driver.execute_script(execute_string)
     games =  json.loads(driver.find_elements_by_css_selector('pre')[0].text)
+    driver.quit()
     return games
 
    

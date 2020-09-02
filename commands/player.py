@@ -15,7 +15,8 @@ class Player(commands.Cog):
         aliases=['pl'],
         usage="pl TheB2"
     )
-    async def player(self, ctx, player_name):
+    async def player(self, ctx, *player_name):
+        player_name=" ".join(player_name)
         print("player called")
         result = await get_player_ranking(player_name)
         ranking= result["result"]["rankProgress"]

@@ -1,3 +1,5 @@
+from data.config import CONFIG
+
 def seconds_to_time(seconds:int):
     print(seconds)
     seconds = seconds % (24 * 3600) 
@@ -29,3 +31,14 @@ def parse_costs(cost_string):
     cost_string = cost_string.replace("a5","fuel")
     cost_string = cost_string.replace("a6","electronics")
     return cost_string
+
+
+def parse_format(input):
+    if input=="all":
+        return "all"
+    for format, aliases  in CONFIG.formats.items():
+        if format.lower()==input.lower():
+            return format
+        if input.lower in aliases:
+            return format
+    return False

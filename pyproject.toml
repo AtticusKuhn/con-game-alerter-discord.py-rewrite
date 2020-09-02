@@ -11,6 +11,8 @@ config = "^0.5.0"
 discord = "^1.0.1"
 flask = "^1.1.2"
 replit = "^2.0.0"
+intervals = "^0.9.0"
+nest-asyncio = "^1.4.0"
 
 [tool.poetry.dev-dependencies]
 

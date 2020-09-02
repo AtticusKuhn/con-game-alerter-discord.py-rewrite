@@ -1,9 +1,9 @@
 from discord.ext import commands
 from datetime import datetime
-import time
 
 import discord_utils.embeds as embeds
 from scraper.request_game import get_global_games
+import methods
 
 class Global(commands.Cog):
     def __init__(self, bot):
@@ -16,18 +16,20 @@ class Global(commands.Cog):
         usage="game newest flashpoint"
     )
     async def game(self, ctx, sort="newest", format="all"):
+        if format !="all":
+            if not methods.parse_format(format):
+                return await ctx.send(embed=embeds.simple_embed(False,"not a valid format"))
+            format = methods.parse_format(format)
         result = await get_global_games()
         print(result)
         games = result["result"]["games"]
-        if format !="all":
-            if format=="ww3" or format=="world war 3":
-                games=list(filter(lambda game:game["properties"]["title"]=="WORLD WAR 3",games))
-            else:
-                games=list(filter(lambda game:game["properties"]["title"]==format,games))
+        games =list(filter(lambda game:game["title"]==format, games))
         if sort=="newest":
             sorted_games = sorted(games, key=lambda game: -int(game["properties"]["startofgame2"]) ) 
         elif sort=="empty":
             sorted_games = sorted(games, key=lambda game: -int(game["properties"]["openSlots"]) ) 
+        if len(sorted_games)==0:
+            return await ctx.send(embed=embeds.simple_embed(False,"can't find any games"))
         game=sorted_games[0]["properties"]
         reply = game["gameID"]
         ts = int(game["startofgame2"])
