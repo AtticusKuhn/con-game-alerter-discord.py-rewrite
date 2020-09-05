@@ -29,6 +29,14 @@ class Alerts(commands.Cog):
                 await ctx.send(embed=embeds.simple_embed(True,"You will be alerted when the next game starts"))
         with open('data/alertpeople.txt', "w") as f:
             f.write("\n".join(people_array))
+   # @commands.command(
+   #     name='set-alert-channel',
+   #     description='set a channel where new games will be announced',
+   #     aliases=['sac'],
+   #     usage="sac #con-games"
+   # )
+   # @commands.has_permissions(manage_channels=True)
+   # async def set_alert_channel(self, channel: discord.textChannel) :
 
 def setup(bot):
     bot.add_cog(Alerts(bot))

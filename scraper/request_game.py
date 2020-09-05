@@ -6,12 +6,18 @@ import json
 import asyncio
 from hashlib import sha1
 import os
+from time import time
+import urllib
 auth_code=os.environ.get('AUTH_CODE')
+auth_code_2=os.environ.get('AUTH_CODE_2')
+
+authTstamp="1599322837"
 
 async def request_game(game_number:int):
     chrome_options = Options()
     chrome_options.add_argument('--no-sandbox')
     chrome_options.add_argument('--disable-dev-shm-usage')
+
     driver = webdriver.Chrome(options=chrome_options)
     driver.get("https://www.duckduckgo.com")
     #await asyncio.sleep(4)
@@ -57,13 +63,14 @@ async def request_game(game_number:int):
         data = json.loads(driver.execute_async_script(new_execute_string))
     except:
         data = result
-    return data
     driver.quit()
+    return data
 async def get_player_ranking(player_name):
     print("get_player_ranking called")
     chrome_options = Options()
     chrome_options.add_argument('--no-sandbox')
     chrome_options.add_argument('--disable-dev-shm-usage')
+
     driver = webdriver.Chrome(options=chrome_options)
     driver.get("https://www.duckduckgo.com")
     hash_code=sha1(f'uberConsearchUserusername={player_name}&authTstamp=1598803665&authUserID=19999486{auth_code}'.encode('utf-8')).hexdigest()
@@ -117,17 +124,63 @@ async def get_player_ranking(player_name):
     driver.execute_script(execute_string)
     data =  json.loads(driver.find_elements_by_css_selector('pre')[0].text)
     print("data",data)
+    driver.quit()
     return data
 
 async def get_global_games():
-    print("get_global_games called")
+    with open("data/games_cache.json") as f:
+        json_file=json.load(f)
+        if(time() - float(json_file["time"])< 40):
+            return json_file["data"]
+        print("get_global_games called")
+        chrome_options = Options()
+        chrome_options.add_argument('--no-sandbox')
+        chrome_options.add_argument('--disable-dev-shm-usage')
+        driver = webdriver.Chrome(options=chrome_options)
+        driver.get("https://www.duckduckgo.com")
+        print("about to hash",f'uberCongetInternationalGamesnumEntriesPerPage=10&page=1&lang=en&isFilterSearch=false&openSlots=1&global=1&authTstamp={authTstamp}&authUserID=19999486{auth_code}')
+        hash_code=sha1(f'uberCongetInternationalGamesnumEntriesPerPage=10&page=1&lang=en&isFilterSearch=false&openSlots=1&global=1&authTstamp={authTstamp}&authUserID=19999486{auth_code}'.encode('utf-8')).hexdigest()
+        print("hash is", hash_code)
+        execute_string = '''
+            function post(path, params, method='post') {
+                const form = document.createElement('form');
+                form.method = method;
+                form.action = path;
+                for (const key in params) {
+                    if (params.hasOwnProperty(key)) {
+                    const hiddenField = document.createElement('input');
+                    hiddenField.type = 'hidden';
+                    hiddenField.name = key;
+                    hiddenField.value = params[key];
+                    form.appendChild(hiddenField);
+                    }
+                }
+                    document.body.appendChild(form);
+                    form.submit();
+            }
+            post("https://www.conflictnations.com/index.php?eID=api&key=uberCon&action=getInternationalGames&hash='''+hash_code+'''&outputFormat=json&apiVersion=20141208",{data:btoa("numEntriesPerPage=10&page=1&lang=en&isFilterSearch=false&openSlots=1&global=1&authTstamp=''' +authTstamp+'''&authUserID=19999486")})
+        '''
+        print("execute_string is", execute_string)
+        driver.execute_script(execute_string)
+        games =  json.loads(driver.find_elements_by_css_selector('pre')[0].text)
+    with open('data/games_cache.json', 'w') as outfile:
+        json.dump({"time":time(),
+            "data":games
+            }, outfile)
+    driver.quit()
+    return games
+
+async def get_alliance(alliance_name):
+    print("get_alliance called")
     chrome_options = Options()
     chrome_options.add_argument('--no-sandbox')
     chrome_options.add_argument('--disable-dev-shm-usage')
     driver = webdriver.Chrome(options=chrome_options)
     driver.get("https://www.duckduckgo.com")
-    hash_code=sha1(f'uberCongetInternationalGamesnumEntriesPerPage=10&page=1&lang=en&isFilterSearch=false&openSlots=1&global=1&authTstamp=1598803665&authUserID=19999486{auth_code}'.encode('utf-8')).hexdigest()
-    #print("the hash is", hash_code)
+    hash_code=sha1(f'uberConsearchAlliancename={alliance_name}&authTstamp={authTstamp}&authUserID=19999486{auth_code}'.encode('utf-8')).hexdigest()
+    print("the hash is", hash_code)
+    url_parsed=urllib.parse.quote(alliance_name)
+    print("url_parsed is", url_parsed)
     execute_string = '''
         function post(path, params, method='post') {
             const form = document.createElement('form');
@@ -145,12 +198,14 @@ async def get_global_games():
                 document.body.appendChild(form);
                 form.submit();
         }
-        post("https://www.conflictnations.com/index.php?eID=api&key=uberCon&action=getInternationalGames&hash='''+hash_code+'''&outputFormat=json&apiVersion=20141208",{data:btoa("numEntriesPerPage=10&page=1&lang=en&isFilterSearch=false&openSlots=1&global=1&authTstamp=1598803665&authUserID=19999486")})
+        post("https://www.conflictnations.com/index.php?eID=api&key=uberCon&action=searchAlliance&hash='''+hash_code+'''&outputFormat=json&apiVersion=20141208",
+        {data:btoa("name='''+url_parsed+'''&authTstamp='''+authTstamp+ '''&authUserID=19999486")})
     '''
-    #print("execute_string is", execute_string)
+    print("execute_string is", execute_string)
     driver.execute_script(execute_string)
-    games =  json.loads(driver.find_elements_by_css_selector('pre')[0].text)
+    await asyncio.sleep(1)
+    alliances =  json.loads(driver.find_elements_by_css_selector('pre')[0].text)
+    print("alliances", alliances)
+    alliance = alliances["result"][0]
     driver.quit()
-    return games
-
-   
+    return alliance

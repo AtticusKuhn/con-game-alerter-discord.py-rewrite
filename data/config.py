@@ -6,6 +6,7 @@ class config:
         "OVERKILL":["ov"],
         "WORLD WAR 3  APOCALYPSE (4X SPEED)":["ww3a4x"],
         "BLOOD AND OIL (4X SPEED)":["boa4x"],
+        "BLOOD AND OIL":["boa"],
         "WORLD WAR 3 (4X SPEED)":["ww34x"],
         "FLASHPOINT":["fp"],
         "WORLD WAR 3":["ww3"]
