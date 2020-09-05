@@ -35,15 +35,15 @@ async def alert_people(client, game):
         format = game["properties"]["title"]
         id= game["properties"]["gameID"]
         game = game["properties"]
-        people = [person for person in alertpeople if person.split(" ")[len(person.split(" "))-1]==format or person.split(" ")[len(person.split(" "))-1]=="all" ]
+        people = [person for person in alertpeople if " ".join(person.split(" ")[1:])==format or person.split(" ")[len(person.split(" "))-1]=="all" ]
         for person in people:
             person=person.split(" ")[0]
             try:
                 user = client.get_user(int(person))
-                print("sending...")
-                await user.send(embed=embeds.simple_embed(True,f'Game {id} has just started at time {datetime.utcfromtimestamp(int(game["startofgame2"])).strftime("%Y-%m-%d %H:%M:%S")}. It is at {int(game["nrofplayers"])-int(game["openSlots"])}/{game["nrofplayers"]} You can join it by going to https://www.conflictnations.com/play.php?bust=1&gameID={id}'))
+                print("sending... to", user.name)
+                await user.send(embed=embeds.simple_embed(True,f'Game {id} {format} has just started at time {datetime.utcfromtimestamp(int(game["startofgame2"])).strftime("%Y-%m-%d %H:%M:%S")}. It is at {int(game["nrofplayers"])-int(game["openSlots"])}/{game["nrofplayers"]} You can join it by going to https://www.conflictnations.com/play.php?bust=1&gameID={id}'))
             except:
-                print("oof cannot send")
+                print("oof cannot send to",user.name )
 
 async def check_for_alerts(client):
     #print("check for alerts called")

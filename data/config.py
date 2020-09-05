@@ -9,7 +9,8 @@ class config:
         "BLOOD AND OIL":["boa"],
         "WORLD WAR 3 (4X SPEED)":["ww34x"],
         "FLASHPOINT":["fp"],
-        "WORLD WAR 3":["ww3"]
+        "WORLD WAR 3":["ww3", "ww31x", "ww3 1x", "world war 3 1x"],
+        "all":["all"]
     }
     delete_time=3600000
 CONFIG = config()

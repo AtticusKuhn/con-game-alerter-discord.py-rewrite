@@ -22,7 +22,9 @@ class Units(commands.Cog):
             found_units = list(filter(lambda unit:unit["unitName"].lower()==unit_name.lower(), data))
             if len(found_units)==0:
                 return await ctx.send(embed=embeds.simple_embed(False,"cannot find unit"))
-            found_unit = found_units[0]
+            if len(found_units) < level:
+                return await ctx.send(embed=embeds.simple_embed(False,"unit does not exist at that level"))
+            found_unit = found_units[level]
             del found_unit["@c"]
             del found_unit["statsColumnID"]
             del found_unit["camouflage"]

@@ -21,11 +21,11 @@ class Alerts(commands.Cog):
             return await ctx.send(embed=embeds.simple_embed(False,"invalid format"))
         with open('data/alertpeople.txt', "r") as f:
             people_array=f.read().split("\n")
-            if  f'{ctx.author.id} {format}' in people_array:
-                people_array.remove(f'{ctx.author.id} {format}')
+            if  f'{ctx.author.id} {parsed_format}' in people_array:
+                people_array.remove(f'{ctx.author.id} {parsed_format}')
                 await ctx.send(embed=embeds.simple_embed(False,"you will now be deleted from the alert list"))
             else:
-                people_array.append(f'{ctx.author.id} {format}')
+                people_array.append(f'{ctx.author.id} {parsed_format}')
                 await ctx.send(embed=embeds.simple_embed(True,"You will be alerted when the next game starts"))
         with open('data/alertpeople.txt', "w") as f:
             f.write("\n".join(people_array))

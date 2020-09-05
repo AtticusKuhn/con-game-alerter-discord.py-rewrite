@@ -20,7 +20,7 @@ class Request_game(commands.Cog):
         if "players" not in result:
             return await ctx.send(embed=embeds.simple_embed(False,"cannot find that id")) 
         players = result["players"]
-        print("Players",players)
+        del players["@c"]
         found=False
         for number, player in players.items():
             print("number",number)
