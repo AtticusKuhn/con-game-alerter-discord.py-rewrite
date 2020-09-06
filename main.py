@@ -6,6 +6,7 @@ import os
 from events.error import command_error
 from events.ready import ready
 
+
 def get_prefix(client, message):
     prefixes = ['!con ']    # sets the prefixes, u can keep it as an array of only 1 item if you need only one prefix
     if not message.guild:
@@ -18,6 +19,7 @@ bot = commands.Bot(        # Create a new bot
     owner_id=464954455029317633,                            # Your unique User ID
     case_insensitive=True                                   # Make the commands case insensitive
 )
+
 
 @bot.event
 async def on_ready():

@@ -14,5 +14,5 @@ async def ready(bot):
         bot.load_extension(f'commands.{cog}')
     #loop = Thread(target=start_loop, args=(bot,))
     #loop.start()
-    await set_interval(await check_for_alerts(bot), 40, bot)
+    await set_interval(await check_for_alerts(bot), 10, bot)
     return

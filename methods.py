@@ -39,7 +39,6 @@ def parse_format(possible_format):
     if possible_format=="all":
         return "all"
     for format, aliases  in CONFIG.formats.items():
-        print( possible_format in aliases, f'trying {possible_format} in {aliases}' )
         if format.lower()==possible_format.lower():
             return format
         if possible_format.lower() in aliases:

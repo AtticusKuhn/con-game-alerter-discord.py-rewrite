@@ -27,6 +27,7 @@ class Global(commands.Cog):
         result = await get_global_games()
         print(result)
         games = result["result"]["games"]
+        print("games length is", len(games))
         games =list(filter(lambda game:game["title"]==format if "title" in game else True, games))
         if sort=="newest":
             sorted_games = sorted(games, key=lambda game: -int(game["properties"]["startofgame2"]) ) 

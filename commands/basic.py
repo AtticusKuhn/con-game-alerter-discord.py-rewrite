@@ -9,7 +9,8 @@ class Basic(commands.Cog):
     @commands.command(
         name='ping',
         description='The ping command. Tests server lag',
-        aliases=['p']
+        aliases=['p'],
+        usage="p"
     )
     async def ping_command(self, ctx):
         start = d.timestamp(d.now())
@@ -19,7 +20,8 @@ class Basic(commands.Cog):
     @commands.command(
         name='help',
         description='gives a list of possible commands',
-        aliases=['commands', "all-commands"]
+        aliases=['commands', "all-commands"],
+        usage="help"
     )
     async def help(self, ctx, cog=""):
         if cog=="":
@@ -45,12 +47,13 @@ class Basic(commands.Cog):
         command = [c for c in self.bot.commands if c.name==command_name or command_name in c.aliases]
         if len(command)>0:
             command=command[0]
-            return await ctx.send(embed=simple_embed(True,f'name: {command.name}\n description:{command.description}\n aliases:{", ".join(command.aliases)}'))
+            return await ctx.send(embed=simple_embed(True,f'name: {command.name}\n description:{command.description}\n aliases:{", ".join(command.aliases)}\n {"usage: "+command.usage if command.usage is not None else ""}'))
         return await ctx.send(embed=simple_embed(False,"can't find command"))
     @commands.command(
         name='invite',
         description='invite this bot to your server',
-        aliases=['inv', 'invitelink']
+        aliases=['inv', 'invitelink'],
+        usage="inv"
     )
     async def invite(self, ctx):
         await ctx.send(embed=simple_embed(True,"invite this bot with https://discord.com/oauth2/authorize?client_id=698691997279584338&permissions=117824&scope=bot"))

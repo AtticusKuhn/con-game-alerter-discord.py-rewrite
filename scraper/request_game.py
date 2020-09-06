@@ -21,7 +21,7 @@ async def request_game(game_number:int):
         print(3)
         result = json.loads(requests.post(f'https://{congs_number}/', data).text)["result"]["states"]["1"]
         print(4)
-    except Exception as e:
+    except:
         result=result["result"]["states"]["1"]
     return result
 
@@ -33,7 +33,10 @@ async def get_player_ranking(player_name):
     }
     result = requests.post(url, data).text
     json_parsed_result = json.loads(result)
+    if len(json_parsed_result["result"])==0:
+        return False
     player = json_parsed_result["result"][0]
+    print(player)
     hash_code2=sha1(f'uberCongetUserDetailsFireflyuserID={str(player["userID"])}&username=1&email=1&emailChangeRequest=1&referrer=1&notifications=1&inventory=1&rankProgress=1&acl=1&stats=1&awardProgress=1&subscriptions=1&links=1&unreadMessages=1&allianceInvites=1&alliance=1&allianceMemberShip=1&deletionStatus=1&locale=en&authTstamp={authTstamp}&authUserID=19999486{auth_code}'.encode('utf-8')).hexdigest()
     url2 = f'https://www.conflictnations.com/index.php?eID=api&key=uberCon&action=getUserDetailsFirefly&hash={hash_code2}&outputFormat=json&apiVersion=20141208'
     data2 = {
@@ -41,14 +44,14 @@ async def get_player_ranking(player_name):
     }
     result2 = requests.post(url2, data2).text
     json_parsed_result2 = json.loads(result2)
-    print(json_parsed_result2)
+    #print(json_parsed_result2)
     return json_parsed_result2
 
 async def get_global_games():
-    hash_code=sha1(f'uberCongetInternationalGamesnumEntriesPerPage=10&page=1&lang=en&isFilterSearch=false&openSlots=1&global=1&authTstamp={authTstamp}&authUserID=19999486{auth_code}'.encode('utf-8')).hexdigest()
+    hash_code=sha1(f'uberCongetInternationalGamesnumEntriesPerPage=20&page=1&lang=en&isFilterSearch=false&openSlots=1&global=1&authTstamp={authTstamp}&authUserID=19999486{auth_code}'.encode('utf-8')).hexdigest()
     url = f'https://www.conflictnations.com/index.php?eID=api&key=uberCon&action=getInternationalGames&hash={hash_code}&outputFormat=json&apiVersion=20141208'
     data = {
-        "data": base64.b64encode(f'numEntriesPerPage=10&page=1&lang=en&isFilterSearch=false&openSlots=1&global=1&authTstamp={authTstamp}&authUserID=19999486'.encode('ascii'))
+        "data": base64.b64encode(f'numEntriesPerPage=20&page=1&lang=en&isFilterSearch=false&openSlots=1&global=1&authTstamp={authTstamp}&authUserID=19999486'.encode('ascii'))
     }
     result = requests.post(url, data).text
     json_parsed_result = json.loads(result)
