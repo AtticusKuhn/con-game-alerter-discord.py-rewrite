@@ -15,6 +15,8 @@ class Player(commands.Cog):
     )
     async def player(self, ctx, *player_name):
         player_name=" ".join(player_name)
+        if player_name == "" or player_name==" ":
+            return await ctx.send(embed=embeds.simple_embed(False,"that is an invalid player name"))
         print("player called")
         result = await get_player_ranking(player_name)
         if not result:

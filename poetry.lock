@@ -187,6 +187,17 @@ version = "1.4.0"
 
 [[package]]
 category = "main"
+description = "Python extension for computing string edit distances and similarities."
+name = "python-levenshtein"
+optional = false
+python-versions = "*"
+version = "0.12.0"
+
+[package.dependencies]
+setuptools = "*"
+
+[[package]]
+category = "main"
 description = "A library for interacting with features of repl.it"
 name = "replit"
 optional = false
@@ -256,7 +267,7 @@ idna = ">=2.0"
 multidict = ">=4.0"
 
 [metadata]
-content-hash = "cc4c39cf3690abe4347ab10c09ea4dbb4c532136d61c5062b642d6d24f7bfdac"
+content-hash = "fa4fe8ce70f0273284b1f6aeb6622543ab4557a3d61e7b153dec33ed8f7f7e18"
 python-versions = "^3.8"
 
 [metadata.files]
@@ -381,6 +392,9 @@ multidict = [
 nest-asyncio = [
     {file = "nest_asyncio-1.4.0-py3-none-any.whl", hash = "sha256:ea51120725212ef02e5870dd77fc67ba7343fc945e3b9a7ff93384436e043b6a"},
     {file = "nest_asyncio-1.4.0.tar.gz", hash = "sha256:5773054bbc14579b000236f85bc01ecced7ffd045ec8ca4a9809371ec65a59c8"},
+]
+python-levenshtein = [
+    {file = "python-Levenshtein-0.12.0.tar.gz", hash = "sha256:033a11de5e3d19ea25c9302d11224e1a1898fe5abd23c61c7c360c25195e3eb1"},
 ]
 replit = [
     {file = "replit-2.0.0-py3-none-any.whl", hash = "sha256:862b49887f486a5c83eba4809b86a977378a008f1c5d53ab3c1187418194cf18"},

@@ -1,5 +1,5 @@
 import json
-import asyncio
+#import asyncio
 from hashlib import sha1
 import os
 import urllib
@@ -44,7 +44,6 @@ async def get_player_ranking(player_name):
     }
     result2 = requests.post(url2, data2).text
     json_parsed_result2 = json.loads(result2)
-    #print(json_parsed_result2)
     return json_parsed_result2
 
 async def get_global_games():
@@ -69,4 +68,16 @@ async def get_alliance(alliance_name):
     alliance = json_parsed_result["result"]
     print(alliance)
     return alliance
-
+async def get_players_in_game(game_id:int):
+    print("get_players_in_game called")
+    print("game id is", game_id)
+    hash_code=sha1(f'uberCongetGamegameID={game_id}&authTstamp={authTstamp}&authUserID=19999486{auth_code}'.encode('utf-8')).hexdigest()
+    url = f' https://www.conflictnations.com/index.php?eID=api&key=uberCon&action=getGame&hash={hash_code}&outputFormat=json&apiVersion=20141208'
+    data = {
+        "data": base64.b64encode(f'gameID={game_id}&authTstamp={authTstamp}&authUserID=19999486'.encode('ascii'))
+    }   
+    print("url", url)
+    print("data", data)
+    result =json.loads(requests.post(url, data).text)
+    print("result", result)
+    return result

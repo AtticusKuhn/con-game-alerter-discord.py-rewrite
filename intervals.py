@@ -49,7 +49,7 @@ async def alert_people(client, game):
 
 
 async def check_for_alerts(client):
-    print("check for alerts called")
+    #print("check for alerts called")
     seengames=[]
     with open('data/seengames.txt', "r") as f:
         seengames=f.read().split("\n")

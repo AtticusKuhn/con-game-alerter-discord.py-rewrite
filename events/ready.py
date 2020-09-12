@@ -1,6 +1,6 @@
 import replit
 from intervals import check_for_alerts, set_interval
-from threading import Thread
+#from threading import Thread
 from os import listdir
 from os.path import isfile, join
 cogs = list(map(lambda x: x[:-3],[f for f in listdir("commands") if isfile(join("commands", f))]))

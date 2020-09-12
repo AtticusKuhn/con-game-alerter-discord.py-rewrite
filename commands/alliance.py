@@ -1,6 +1,6 @@
 from discord.ext import commands
-from datetime import datetime
-import time
+#from datetime import datetime
+#import time
 
 import discord_utils.embeds as embeds
 from scraper.request_game import get_alliance

@@ -1,6 +1,6 @@
 import discord
 from data.config import CONFIG
-from datetime import date
+#from datetime import date
 
 def simple_embed(success,message):
     if success=="info":
@@ -9,6 +9,8 @@ def simple_embed(success,message):
         color=0x00ff00
     if not success:
         color=0xff0000
+    if len(message)>2000:
+        message=message[:2000]+"....."
     embedVar = discord.Embed(
         title="Con bot",
         description=message,

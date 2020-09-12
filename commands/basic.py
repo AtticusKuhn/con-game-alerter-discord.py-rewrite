@@ -1,7 +1,7 @@
 from discord.ext import commands
 from datetime import datetime as d
 from discord_utils.embeds import simple_embed
-import discord 
+#import discord 
 
 class Basic(commands.Cog):
     def __init__(self, bot):
