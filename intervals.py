@@ -55,6 +55,7 @@ async def check_for_alerts(client):
         seengames=f.read().split("\n")
         #print("seengames is", seengames)
         result = await get_global_games()
+        #print('result',result)
         games = result["result"]["games"]
         newly_seen_games=[]
         for game in games:
