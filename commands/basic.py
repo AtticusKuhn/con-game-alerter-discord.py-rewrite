@@ -1,6 +1,6 @@
 from discord.ext import commands
 from datetime import datetime as d
-from discord_utils.embeds import simple_embed
+from discord_utils.embeds import simple_embed,dict_to_embed
 #import discord 
 
 class Basic(commands.Cog):
@@ -25,14 +25,20 @@ class Basic(commands.Cog):
     )
     async def help(self, ctx, cog=""):
         if cog=="":
-            return_string=" ".join(list(map(lambda command: f'{str(command)} - {str(command.description)}\n', self.bot.commands)))
-            return_string+='\n remember that to see commands relating to a specific module, you can do help {module name}. \n also to get info on a command do info {command name}'
-            return await ctx.send(embed=simple_embed(True, return_string))
+            return_dict = {}
+            for command in self.bot.commands:
+                name = command.cog.__class__.__name__
+                if not name in return_dict:
+                    return_dict[name] = ""
+                return_dict[name] += f'{str(command)},\n'
+            for command in return_dict:
+                return_dict[command]= return_dict[command][:-2]
+            return_dict["helpful tips"] = '\n remember that to see commands relating to a specific module, you can do help {module name}. \n also to get info on a command do info {command name}'
+            return await ctx.send(embed=dict_to_embed(return_dict))
         if not cog in self.bot.cogs:
             return await ctx.send(embed=simple_embed(False,f'Unrecognized module. The recognized modules are {", ".join(self.bot.cogs)}'))
         return_commands = []
         for command in self.bot.commands:
-            print("command",command.cog.__class__.__name__)
             if command.cog.__class__.__name__ == cog:
                 return_commands.append(command)
         return_commands=list(map(lambda c:f'{str(c)} - {str(c.description)}',return_commands))

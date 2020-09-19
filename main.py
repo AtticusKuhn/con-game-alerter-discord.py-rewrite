@@ -1,3 +1,5 @@
+
+
 from discord.ext import commands
 # Import the keep alive file
 import keep_alive
@@ -5,6 +7,10 @@ import os
 ##events
 from events.error import command_error
 from events.ready import ready
+from data.config import CONFIG
+import sys 
+sys.setrecursionlimit(10**6) 
+
 #import json
 #with open("data/countriesfinal.txt", "r") as f:
 #    countriesfinal = json.loads(f.read())
@@ -23,9 +29,7 @@ from events.ready import ready
 #    f.write(json.dumps(countriesfinal))
 
 def get_prefix(client, message):
-    prefixes = ['!con ']    # sets the prefixes, u can keep it as an array of only 1 item if you need only one prefix
-    if not message.guild:
-        prefixes = ['!con']   # Only allow '==' as a prefix when in DMs
+    prefixes = [CONFIG.prefix]    # sets the prefixes, u can keep it as an array of only 1 item if you need only one prefix
     return commands.when_mentioned_or(*prefixes)(client, message)    # Allow users to @mention the bot instead of using a prefix when using a command.
  
 bot = commands.Bot(        # Create a new bot                                     

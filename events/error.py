@@ -3,6 +3,7 @@ import traceback
 from discord.ext.commands import CommandNotFound
 from Levenshtein import distance
 import re
+from discord import DiscordException
 
 async def command_error(bot, ctx, error):
     if isinstance(error, CommandNotFound):
@@ -23,6 +24,8 @@ async def command_error(bot, ctx, error):
                     dis= test_distance
                     current_command= alias
         return await ctx.send(embed=simple_embed(False, f' I do not recognize that command. It is closest to "{current_command}"'))
+    if isinstance(error, DiscordException):
+        print("the error was a discord error")
     print(error)
     await ctx.send(embed=simple_embed(False, str(error)))
     etype = type(error)

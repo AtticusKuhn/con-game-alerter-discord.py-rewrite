@@ -7,7 +7,7 @@ import requests
 import base64
 auth_code=os.environ.get('AUTH_CODE')
 #auth_code_2=os.environ.get('AUTH_CODE_2')
-authTstamp="1599586895"
+authTstamp="1600442137"
 
 async def request_game(game_number:int):
     congs_number= "https://congs6.c.bytro.com/"
@@ -47,13 +47,16 @@ async def get_player_ranking(player_name):
     return json_parsed_result2
 
 async def get_global_games():
-    hash_code=sha1(f'uberCongetInternationalGamesnumEntriesPerPage=20&page=1&lang=en&isFilterSearch=false&openSlots=1&global=1&authTstamp={authTstamp}&authUserID=19999486{auth_code}'.encode('utf-8')).hexdigest()
+    numbers = "1000"
+    hash_code=sha1(f'uberCongetInternationalGamesnumEntriesPerPage={numbers}&page=1&lang=en&isFilterSearch=false&openSlots=1&global=1&authTstamp={authTstamp}&authUserID=19999486{auth_code}'.encode('utf-8')).hexdigest()
     url = f'https://www.conflictnations.com/index.php?eID=api&key=uberCon&action=getInternationalGames&hash={hash_code}&outputFormat=json&apiVersion=20141208'
     data = {
-        "data": base64.b64encode(f'numEntriesPerPage=20&page=1&lang=en&isFilterSearch=false&openSlots=1&global=1&authTstamp={authTstamp}&authUserID=19999486'.encode('ascii'))
+        "data": base64.b64encode(f'numEntriesPerPage={numbers}&page=1&lang=en&isFilterSearch=false&openSlots=1&global=1&authTstamp={authTstamp}&authUserID=19999486'.encode('ascii'))
     }
     result = requests.post(url, data).text
     json_parsed_result = json.loads(result)
+    if  "games" not  in json_parsed_result["result"]:
+        print("error!!!!", result)
     return json_parsed_result
 
 async def get_alliance(alliance_name):

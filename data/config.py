@@ -13,4 +13,5 @@ class config:
         "all":["all"]
     }
     delete_time=3600000
+    prefix="!con "
 CONFIG = config()

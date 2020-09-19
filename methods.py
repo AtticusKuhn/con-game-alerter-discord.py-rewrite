@@ -1,4 +1,5 @@
 from data.config import CONFIG
+import random
 
 def seconds_to_time(seconds:int):
     print(seconds)
@@ -44,3 +45,12 @@ def parse_format(possible_format):
         if possible_format.lower() in aliases:
             return format
     return False
+
+
+
+def random_line(afile):
+    line = next(afile)
+    for num, aline in enumerate(afile, 2):
+      if random.randrange(num): continue
+      line = aline
+    return line
