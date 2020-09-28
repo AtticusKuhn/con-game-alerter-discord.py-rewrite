@@ -17,4 +17,6 @@ async def ready(bot):
         bot.load_extension(f'commands.{cog}')
     await bot.change_presence(activity=discord.Game(name=f'{CONFIG.prefix}help for help'))
     await set_interval(await check_for_alerts(bot), 10, bot)
+    
+    
     return

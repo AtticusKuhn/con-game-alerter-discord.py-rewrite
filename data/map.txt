@@ -1,0 +1,15 @@
+{
+    "ww3":{
+        "cities":"https://cdn.discordapp.com/attachments/703352940852805712/757253324708905000/fig1_6.jpeg",
+        "vps":"https://cdn.discordapp.com/attachments/703352940852805712/757256039707049994/fig1_7.jpeg",
+        "doctrine":"https://cdn.discordapp.com/attachments/703352940852805712/757264835342893108/fig1_10.jpeg"
+    },
+    "flashpoint":{
+        "cities":"https://cdn.discordapp.com/attachments/749095874214232074/757088055545823313/fig1_4.jpeg",
+        "vps":"https://cdn.discordapp.com/attachments/749095874214232074/757088620912836650/fig1_5.jpeg"
+    },
+    "overkill":{
+        "cities":"https://cdn.discordapp.com/attachments/703352940852805712/757259017193127976/fig1_8.jpeg",
+        "vps":"https://cdn.discordapp.com/attachments/703352940852805712/757259228124545104/fig1_9.jpeg"
+    }
+}

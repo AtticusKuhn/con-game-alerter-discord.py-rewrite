@@ -29,6 +29,8 @@ class PersonConverter(commands.Converter):
                     return member
             if member.nick==ping:
                 return member
+            if member.name.startswith(ping):
+                return member
             test_distance = distance(ping, member.name)
             if test_distance< my_distance:
                 my_distance = test_distance

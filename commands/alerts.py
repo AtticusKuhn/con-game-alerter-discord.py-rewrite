@@ -2,6 +2,7 @@ from discord.ext import commands
 
 import discord_utils.embeds as embeds
 import methods
+import discord_utils.converters as converters
 
 import json
 from datetime import datetime
@@ -17,7 +18,7 @@ class Alerts(commands.Cog):
         aliases=['a'],
         usage="a ww3 time:12:10:03 uses:5"
     )
-    async def alert(self, ctx,format="all", *options):
+    async def alert(self, ctx,format:converters.FormatConverter="all", *options):
         parsed_format=methods.parse_format(format)
         if not parsed_format:
             return await ctx.send(embed=embeds.simple_embed(False,"invalid format"))

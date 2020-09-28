@@ -7,7 +7,7 @@ import requests
 import base64
 auth_code=os.environ.get('AUTH_CODE')
 #auth_code_2=os.environ.get('AUTH_CODE_2')
-authTstamp="1600442137"
+authTstamp="1601082883"
 
 async def request_game(game_number:int):
     congs_number= "https://congs6.c.bytro.com/"

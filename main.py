@@ -29,7 +29,7 @@ sys.setrecursionlimit(10**6)
 #    f.write(json.dumps(countriesfinal))
 
 def get_prefix(client, message):
-    prefixes = [CONFIG.prefix]    # sets the prefixes, u can keep it as an array of only 1 item if you need only one prefix
+    prefixes = [CONFIG.prefix, "!com "]    # sets the prefixes, u can keep it as an array of only 1 item if you need only one prefix
     return commands.when_mentioned_or(*prefixes)(client, message)    # Allow users to @mention the bot instead of using a prefix when using a command.
  
 bot = commands.Bot(        # Create a new bot                                     

@@ -14,6 +14,7 @@ replit = "^2.0.0"
 intervals = "^0.9.0"
 nest-asyncio = "^1.4.0"
 python-Levenshtein = "^0.12.0"
+imgkit = "^1.0.2"
 
 [tool.poetry.dev-dependencies]
 

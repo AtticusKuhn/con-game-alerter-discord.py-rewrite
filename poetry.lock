@@ -116,6 +116,14 @@ version = "2.10"
 
 [[package]]
 category = "main"
+description = "Wkhtmltopdf python wrapper to convert html to image using the webkit rendering engine and qt"
+name = "imgkit"
+optional = false
+python-versions = "*"
+version = "1.0.2"
+
+[[package]]
+category = "main"
 description = "All-in-one infinity value for Python. Can be compared to any object."
 name = "infinity"
 optional = false
@@ -267,7 +275,7 @@ idna = ">=2.0"
 multidict = ">=4.0"
 
 [metadata]
-content-hash = "fa4fe8ce70f0273284b1f6aeb6622543ab4557a3d61e7b153dec33ed8f7f7e18"
+content-hash = "6c12a1ebbbd7c13b31eb68f9de79db3e076198f0733eaf4fd2fd03722955c0c3"
 python-versions = "^3.8"
 
 [metadata.files]
@@ -320,6 +328,9 @@ flask = [
 idna = [
     {file = "idna-2.10-py2.py3-none-any.whl", hash = "sha256:b97d804b1e9b523befed77c48dacec60e6dcb0b5391d57af6a65a312a90648c0"},
     {file = "idna-2.10.tar.gz", hash = "sha256:b307872f855b18632ce0c21c5e45be78c0ea7ae4c15c828c20788b26921eb3f6"},
+]
+imgkit = [
+    {file = "imgkit-1.0.2.tar.gz", hash = "sha256:29a12adf8dc3f2c65c465bcb0568393573b8d52c4be2a4a9230b162a1ac53c8d"},
 ]
 infinity = [
     {file = "infinity-1.5.tar.gz", hash = "sha256:8daa7c15ce2100fdccfde212337e0cd5cf085869f54dc2634b6c30d61461ecda"},

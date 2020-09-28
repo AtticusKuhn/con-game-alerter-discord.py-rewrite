@@ -4,7 +4,7 @@ from discord.ext.commands import CommandNotFound
 from Levenshtein import distance
 import re
 from discord import DiscordException
-
+from data.config import CONFIG
 async def command_error(bot, ctx, error):
     if isinstance(error, CommandNotFound):
         regex = re.search(r'"([A-Za-z0-9_\./\\-]*)"', str(error))
@@ -23,7 +23,7 @@ async def command_error(bot, ctx, error):
                 if  test_distance< dis:
                     dis= test_distance
                     current_command= alias
-        return await ctx.send(embed=simple_embed(False, f' I do not recognize that command. It is closest to "{current_command}"'))
+        return await ctx.send(embed=simple_embed(False, f' I do not recognize that command. It is closest to the existing command "{current_command}". If you did not mean to use that then try {CONFIG.prefix}help'))
     if isinstance(error, DiscordException):
         print("the error was a discord error")
     print(error)

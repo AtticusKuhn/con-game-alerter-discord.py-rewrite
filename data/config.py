@@ -5,10 +5,11 @@ class config:
     formats={
         "OVERKILL":["ov"],
         "WORLD WAR 3  APOCALYPSE (4X SPEED)":["ww3a4x", "4x"],
-        "BLOOD AND OIL (4X SPEED)":["boa4x"],
-        "BLOOD AND OIL":["boa"],
+        "BLOOD AND OIL (4X SPEED)":["boa4x","boa", "blood"],
         "WORLD WAR 3 (4X SPEED)":["ww34x"],
         "FLASHPOINT":["fp"],
+        "RISING TIDES":["rt", "rising", "tides"],
+        "MIDDLE EAST CRISIS":["mecs"],
         "WORLD WAR 3":["ww3", "ww31x", "ww3 1x", "world war 3 1x", "1x"],
         "all":["all"]
     }
