@@ -29,10 +29,10 @@ async def alert_people(client, game):
             if alertpeople[person]["format"]==format or alertpeople[person]["format"]=="all":
                 try:
                     user = client.get_user(int(person))
-                    print("sending... to", user.name)
+                    client.print("sending... to"+ user.name)
                     await user.send(embed=embeds.simple_embed(True,f'Game {id} {format} has just started at time {datetime.utcfromtimestamp(int(game["startofgame2"])).strftime("%Y-%m-%d %H:%M:%S")}. It is at {int(game["nrofplayers"])-int(game["openSlots"])}/{game["nrofplayers"]} You can join it by going to https://www.conflictnations.com/play.php?bust=1&gameID={id}'))
                 except:
-                    print("oof cannot send to",user.name )
+                    client.print("oof cannot send to" )
                 if "uses" in alertpeople[person]:
                     print("uses is in person")
                     alertpeople[person]["uses"]-=1

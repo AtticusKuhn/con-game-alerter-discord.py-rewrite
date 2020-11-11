@@ -4,9 +4,10 @@ class config:
     image="https://lh3.googleusercontent.com/nPtzn3DxPbVIHxztpCzEH3T3hjy2d9X3cSMp6s6YVyuvvb90UVPBCDaJVQbr-GLJq6eSJH73y4Y=w640-h400-e365"
     formats={
         "OVERKILL":["ov"],
+        "OVERKILL 4X":["ov4x","ov 4x", "overkill 4x speed"],
         "WORLD WAR 3  APOCALYPSE (4X SPEED)":["ww3a4x", "4x"],
         "BLOOD AND OIL (4X SPEED)":["boa4x","boa", "blood"],
-        "WORLD WAR 3 (4X SPEED)":["ww34x"],
+        "WORLD WAR 3 (4X SPEED)":["ww34x", "ww3 4x","ww3-4x"],
         "FLASHPOINT":["fp"],
         "RISING TIDES":["rt", "rising", "tides"],
         "MIDDLE EAST CRISIS":["mecs"],

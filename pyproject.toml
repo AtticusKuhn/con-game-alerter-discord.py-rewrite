@@ -1,20 +1,19 @@
 [tool.poetry]
-name = "con-game-alerter-discordpy-rewrite"
+name = "repl_python3_con-game-alerter-discordpy-rewrite"
 version = "0.1.0"
 description = ""
-authors = ["Your Name <you@example.com>"]
+authors = ["repl.it user <replituser@example.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-selenium = "^3.141.0"
-config = "^0.5.0"
-discord = "^1.0.1"
 flask = "^1.1.2"
 replit = "^2.0.0"
-intervals = "^0.9.0"
-nest-asyncio = "^1.4.0"
+aiohttp = "^3.6.2"
+discord = "^1.0.1"
 python-Levenshtein = "^0.12.0"
-imgkit = "^1.0.2"
+pytest = "^6.1.2"
+termcolor = "^1.1.0"
+nest-asyncio = "^1.4.2"
 
 [tool.poetry.dev-dependencies]
 

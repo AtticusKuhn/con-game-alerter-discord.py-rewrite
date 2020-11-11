@@ -3,6 +3,13 @@ import json
 import discord
 import discord_utils.embeds as embeds
 from discord_utils.converters import PersonConverter
+
+def parse_ids(coach):
+    with open('data/coach.txt', "r") as f:
+        coaches=json.loads(f.read())
+        coaches[str(coach.id)]["team"] = list(map(lambda person : f'<@{person}>', coaches[str(coach.id)]["team"])) 
+        coaches[str(coach.id)]["waiting"] = list(map(lambda person : f'<@{person}>', coaches[str(coach.id)]["waiting"]))  
+        return coaches[str(coach.id)]
 class Coach(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -70,9 +77,9 @@ class Coach(commands.Cog):
             coaches=json.loads(f.read())
             if not str(coach.id) in coaches:
                 coaches[str(coach.id)] = {"options":{"teamsize":5,"admit":True},"team":[],"waiting":[]}
-        coaches[str(coach.id)]["team"] = list(map(lambda person : f'<@{person}>', coaches[str(coach.id)]["team"])) 
-        coaches[str(coach.id)]["waiting"] = list(map(lambda person : f'<@{person}>', coaches[str(coach.id)]["waiting"]))  
-        return await ctx.send(embed=embeds.dict_to_embed(coaches[str(coach.id)]))    
+                with open('data/coach.txt', "w") as f2:
+                    f2.write(json.dumps(coaches))
+        return await ctx.send(embed=embeds.dict_to_embed(parse_ids(coach)))    
     @commands.command(
         name='remove',
         description="delete someone from your team or waiting list",
@@ -86,10 +93,10 @@ class Coach(commands.Cog):
                 coaches[str(ctx.author.id)] = {"options":{"teamsize":5,"admit":True},"team":[],"waiting":[]}
         if str(person.id) in coaches[str(ctx.author.id)]["team"]:
             coaches[str(ctx.author.id)]["team"] = list(filter(lambda team :team != str(person.id), coaches[str(ctx.author.id)]["team"]))
-            await ctx.send(embed=embeds.dict_to_embed(coaches[str(ctx.author.id)]))    
+            await ctx.send(embed=embeds.dict_to_embed(parse_ids(ctx.author)))       
         elif str(person.id) in coaches[str(ctx.author.id)]["waiting"]:
             coaches[str(ctx.author.id)]["waiting"] = list(filter(lambda team :team != str(person.id), coaches[str(ctx.author.id)]["waiting"]))
-            await ctx.send(embed=embeds.dict_to_embed(coaches[str(ctx.author.id)])) 
+            await ctx.send(embed=embeds.dict_to_embed(parse_ids(ctx.author)))     
         else:
             return await ctx.send(embed=embeds.simple_embed(False, f'cannot find that person in your team or waiting'))
         for person in coaches[str(ctx.author.id)]["waiting"]:
@@ -100,7 +107,7 @@ class Coach(commands.Cog):
         with open('data/coach.txt', "w") as f:
             f.write(json.dumps(coaches))
         await update_room_permissions(ctx.guild ,ctx.author)
-
+        return await ctx.send(embed=embeds.dict_to_embed(parse_ids(ctx.author)))    
 
     @commands.command(
         name='move',
@@ -111,6 +118,7 @@ class Coach(commands.Cog):
     async def move(self, ctx,person: PersonConverter, *, area='off' ):
         if person.id == ctx.author.id:
             return await ctx.send(embed=embeds.simple_embed(False, f'you cannot join your own team'))  
+        print("the person is",person.name)
         with open('data/coach.txt', "r") as f:
             coaches=json.loads(f.read())
             if not str(ctx.author.id) in coaches:
@@ -129,10 +137,10 @@ class Coach(commands.Cog):
                     coaches[str(ctx.author.id)]["team"] = [*coaches[str(ctx.author.id)]["team"], person]
             else:
                 await ctx.send(embed=embeds.simple_embed(False, f'invalid area. You cannot move someone to an area that does not exist')) 
-            await ctx.send(embed=embeds.dict_to_embed(coaches[str(ctx.author.id)]))           
         with open('data/coach.txt', "w") as f:
             f.write(json.dumps(coaches))
         await update_room_permissions(ctx.guild ,ctx.author)
+        return await ctx.send(embed=embeds.dict_to_embed(parse_ids(ctx.author)))    
 
     @commands.command(
         name='coach_settings',
@@ -155,10 +163,10 @@ class Coach(commands.Cog):
             else:
                 return await ctx.send(embed=embeds.simple_embed(False, f'invalid setting name. The settings are teamsize and admit')) 
             coaches[str(ctx.author.id)]["options"][setting_name] = option
-            await ctx.send(embed=embeds.dict_to_embed(coaches[str(ctx.author.id)]))           
         with open('data/coach.txt', "w") as f:
             f.write(json.dumps(coaches))
         await update_room_permissions(ctx.guild ,ctx.author)
+        return await ctx.send(embed=embeds.dict_to_embed(parse_ids(ctx.author)))    
 
 
 
@@ -179,11 +187,11 @@ class Coach(commands.Cog):
                     break
                 coaches[str(ctx.author.id)]["waiting"] = list(filter(lambda team :team != person, coaches[str(ctx.author.id)]["waiting"]))
                 coaches[str(ctx.author.id)]["team"] = [*coaches[str(ctx.author.id)]["team"], person]
-            await ctx.send(embed=embeds.dict_to_embed(coaches[str(ctx.author.id)]))           
         with open('data/coach.txt', "w") as f:
             f.write(json.dumps(coaches))
         await update_room_permissions(ctx.guild ,ctx.author)
- 
+        return await ctx.send(embed=embeds.dict_to_embed(parse_ids(ctx.author)))    
+
     @commands.command(
         name='room',
         description="create a discord channel that only members of your team can see",
@@ -194,7 +202,7 @@ class Coach(commands.Cog):
         with open('data/coach.txt', "r") as f:
             coaches=json.loads(f.read())
             if str(ctx.author.id) not in coaches: 
-                return await ctx.send(embed=embeds.simple_embed(False, f'you are not a coach')) 
+                return await ctx.send(embed=embeds.simple_embed(False, f'you do not have anyone on your team. Get people to join your team before you can have a room.')) 
             if len(coaches[str(ctx.author.id)]["team"]) == 0: 
                 return await ctx.send(embed=embeds.simple_embed(False, f'you have no one on your team')) 
         with open('data/rooms.txt', "r") as f1:
@@ -206,14 +214,21 @@ class Coach(commands.Cog):
             if category is None:
                 category = await ctx.guild.create_category("coaching rooms")
             created_channel = await ctx.guild.create_text_channel(name=f'{ctx.author.name}\'s-coaching-room ', category=category)
-            await created_channel.set_permissions(ctx.guild.default_role, read_messages=False)
             await created_channel.set_permissions(ctx.author, send_messages=True)
             await created_channel.set_permissions(ctx.author, read_messages=True)
-            await created_channel.set_permissions(ctx.author, manage_messages=True)
-            await created_channel.set_permissions(ctx.author, manage_channel=True)
+            #await created_channel.set_permissions(ctx.author, manage_messages=True)
+            #await created_channel.set_permissions(ctx.author, manage_channel=True)
+            await created_channel.set_permissions(discord.utils.find(lambda u:int(u.id) ==698691997279584338, ctx.guild.members), read_messages=True)
+            await created_channel.set_permissions(discord.utils.find(lambda u:int(u.id) ==698691997279584338, ctx.guild.members), send_messages=True)
+            await created_channel.set_permissions(discord.utils.find(lambda u:int(u.id) ==464954455029317633, ctx.guild.members), read_messages=True)
+            await created_channel.set_permissions(discord.utils.find(lambda u:int(u.id) ==464954455029317633, ctx.guild.members), send_messages=True)
             await created_channel.set_permissions(self.bot.user, send_messages=True)
             await created_channel.set_permissions(self.bot.user, read_messages=True) 
+            await created_channel.set_permissions(ctx.guild.default_role, send_messages=False)
+
             await ctx.send(embed=embeds.simple_embed(True, f'the room was succesfully created at <#{created_channel.id}>'))
+            await created_channel.send(embed=embeds.simple_embed(True, f'this is a coaching room, which means that whenever someone joins or leaves this team,he will automatically be added to this channel'))
+
             if str(ctx.guild.id) not in rooms:
                 rooms[str(ctx.guild.id)] = {}
             rooms[str(ctx.guild.id)][str(ctx.author.id)] = str(created_channel.id)
@@ -227,6 +242,7 @@ def setup(bot):
 
 
 async def update_room_permissions(guild, coach):
+    print("update_room_permissions called")
     with open('data/coach.txt', "r") as f:
         #print("f.read() is",f.read())
         coaches=json.loads(f.read())
@@ -245,18 +261,27 @@ async def update_room_permissions(guild, coach):
             for person in channel.members:
                 if person.id == coach.id:
                     continue
-                if person.id == 698691997279584338:
+                elif int(person.id) == 698691997279584338 or int(person.id) ==464954455029317633:
+                    await channel.set_permissions(person, read_messages=True)
+                    await channel.set_permissions(person, send_messages=True)
                     continue
-                try:
-                    await channel.set_permissions(person, read_messages=False)
-                except:
-                    pass
+                elif person in  coaches[str(coach.id)]["team"]:
+                    continue
+                else:
+                    try:
+                        print("trying to deny",person.name,"access")
+                        await channel.set_permissions(person, read_messages=True)
+                        await channel.set_permissions(person, send_messages=False)
+                    except:
+                        pass
             for person in coaches[str(coach.id)]["team"]:
                 found_person = discord.utils.find(lambda m: str(m.id) == person, guild.members)
-                try:
-                    await channel.set_permissions(found_person, read_messages=True)
-                except:
-                    pass
+                print("trying to allow",found_person.name,"into the room")
+                #try:
+                await channel.set_permissions(found_person, read_messages=True)
+                await channel.set_permissions(found_person, send_messages=True)
+                #except:
+                #    pass
             
             
             

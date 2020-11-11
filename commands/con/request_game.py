@@ -15,6 +15,8 @@ class Request_game(commands.Cog):
         usage="infc 3320203 Sweden"
     )
     async def info_country(self, ctx, game_id:int,country):
+        return await ctx.send(embed=embeds.simple_embed(False,"this command does not work and it is currently broken")) 
+
         result = await request_game(game_id)
         if "players" not in result:
             return await ctx.send(embed=embeds.simple_embed(False,"cannot find that id")) 

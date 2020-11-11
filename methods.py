@@ -54,3 +54,5 @@ def random_line(afile):
       if random.randrange(num): continue
       line = aline
     return line
+
+    

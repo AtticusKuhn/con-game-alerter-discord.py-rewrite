@@ -55,7 +55,7 @@ class Fun(commands.Cog):
                 correct_answer = chosen_unit["unitName"]
                 question = f'https://www.conflictnations.com/clients/con-client/con-client_live/images/warfare/2/{chosen_unit["identifier"]}_1_0.png?1593611138'
                 incorrect_answers = list(map(lambda x: x["unitName"], random.sample(units, 3)))
-        if quiz_type == "identify unit description":
+        elif quiz_type == "identify unit description":
             with open('data/units.json') as json_file:
                 units = json.load(json_file)
                 chosen_unit = random.choice(units)
@@ -63,7 +63,7 @@ class Fun(commands.Cog):
                     
                 question =  f'Identify the following unit: {chosen_unit["unitDesc"]}'
                 incorrect_answers = list(map(lambda x: x["unitName"], random.sample(units, 3)))
-        if quiz_type == "identify country flag":
+        elif quiz_type == "identify country flag":
             with open('data/countriesfinal.txt') as json_file:
                 countries = json.load(json_file)   
                 chosen_country = random.choice(list(countries.keys()))
@@ -135,7 +135,36 @@ class Fun(commands.Cog):
         final_buffer.seek(0)# seek back to the start of the stream
         file = discord.File(filename="article_2.png", fp = final_buffer)
         await ctx.send(file=file)# send it
+    @commands.command(
+        name='message',
+        description='create your own fake message',
+        aliases=['msg',],
+        usage="msg hi"
+    )
+    async def message(self, ctx, *, message):
+        def check(m):
+            return m.channel == ctx.channel and m.author == ctx.author
+        await ctx.send(embed=embeds.simple_embed(True, "ok now give me the country"))
+        response1 = await self.bot.wait_for('message', check=check)
+        country=response1.content
+        img = Image.open("data/images/message2.png")
+        font = ImageFont.truetype("data/fonts/Exo2Semibold.otf", 20) #Make sure you insert a valid font from your folder.
+        draw = ImageDraw.Draw(img)
+        draw.text((690, 108), message, (255, 255, 255), font=font) #draws Information
+        draw.text((85, 40), country, (255, 255, 255), font=font) #draws Information
 
+        flag_response1 = requests.get(f'https://www.conflictnations.com/clients/con-client/con-client_live/images/flags/countryFlagsByName/small_{country.lower().replace(" ","")}.png?')
+        flag_response2 = requests.get(f'https://www.conflictnations.com/clients/con-client/con-client_live/images/flags/countryFlagsByName/big_{country.lower().replace(" ","")}.png?')
+        bigflag = Image.open(BytesIO(flag_response2.content)).resize((100,60))
+        smallflag = Image.open(BytesIO(flag_response1.content)).resize((40,30))
+        img.paste(bigflag, (1325, 90))
+        img.paste(smallflag, (25, 40))
+
+        final_buffer = BytesIO()
+        img.save(final_buffer, "png")# save into the stream, using png format.
+        final_buffer.seek(0)# seek back to the start of the stream
+        file = discord.File(filename="article_2.png", fp = final_buffer)
+        await ctx.send(file=file)
 
 def setup(bot):
     bot.add_cog(Fun(bot))

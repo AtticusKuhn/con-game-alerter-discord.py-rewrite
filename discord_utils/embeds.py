@@ -38,7 +38,11 @@ def dict_to_embed(dict, image=None):
                 ret_string+= f'{key1}: {value1},\n'
             ret_string=ret_string[:-2]
             value = ret_string
-        value = str(value)+"\u200b"
+        value = str(value)
+        if str(value)=="":
+            value+="\u200b"
+        if len(value) > 1000:
+            value = value[:1000]+"..."
         embedVar.add_field(name=key, value= value)
     embedVar.set_footer(text="A general purpose CoN bot", icon_url=CONFIG.image)
     if image is not None:

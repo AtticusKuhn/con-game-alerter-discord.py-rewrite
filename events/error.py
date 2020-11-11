@@ -6,9 +6,14 @@ import re
 from discord import DiscordException
 from data.config import CONFIG
 async def command_error(bot, ctx, error):
+    print(f'error: {error}')
+    bot.command_errors+=1
     if isinstance(error, CommandNotFound):
-        regex = re.search(r'"([A-Za-z0-9_\./\\-]*)"', str(error))
-        false_command = regex.group()
+        regex = re.search(r'".*"', str(error))
+        if regex is not None:
+            false_command = regex.group()
+        else:
+            false_command = ""
         dis=1000
         current_command=""
         for command in bot.commands:
