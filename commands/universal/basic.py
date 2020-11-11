@@ -24,7 +24,7 @@ class Basic(commands.Cog):
         usage="help"
     )
     async def help(self, ctx, cog=""):
-        print("help called with cog", cog)
+        # print("help called with cog", cog)
         if cog=="":
             return_dict = {}
             for command in self.bot.commands:
@@ -38,7 +38,7 @@ class Basic(commands.Cog):
             for command in return_dict:
                 return_dict[command]= return_dict[command][:-2]
             return_dict["helpful tips"] = '\n remember that to see commands relating to a specific module, you can do help {module name}. \n also to get info on a command do info {command name}'
-            print("help is done")
+            # print("help is done")
             return await ctx.send(embed=dict_to_embed(return_dict))
         if not cog in self.bot.cogs:
             return await ctx.send(embed=simple_embed(False,f'Unrecognized module. The recognized modules are {", ".join(self.bot.cogs)}'))

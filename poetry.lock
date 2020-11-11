@@ -74,6 +74,14 @@ version = "0.4.4"
 
 [[package]]
 category = "main"
+description = "Simple library for color and formatting to terminal"
+name = "colored"
+optional = false
+python-versions = "*"
+version = "1.4.2"
+
+[[package]]
+category = "main"
 description = "A mirror package for discord.py. Please install that instead."
 name = "discord"
 optional = false
@@ -322,7 +330,7 @@ idna = ">=2.0"
 multidict = ">=4.0"
 
 [metadata]
-content-hash = "a43133815577d033ed1bdf2d68b3b9abc2177fc24c1f3698393bedef6ef1d29a"
+content-hash = "6a9106145bc77d100f45a1859c636589c74faf79d4c4e1ec59c0ab6dec3a0b1a"
 python-versions = "^3.8"
 
 [metadata.files]
@@ -363,6 +371,9 @@ click = [
 colorama = [
     {file = "colorama-0.4.4-py2.py3-none-any.whl", hash = "sha256:9f47eda37229f68eee03b24b9748937c7dc3868f906e8ba69fbcbdd3bc5dc3e2"},
     {file = "colorama-0.4.4.tar.gz", hash = "sha256:5941b2b48a20143d2267e95b1c2a7603ce057ee39fd88e7329b0c292aa16869b"},
+]
+colored = [
+    {file = "colored-1.4.2.tar.gz", hash = "sha256:056fac09d9e39b34296e7618897ed1b8c274f98423770c2980d829fd670955ed"},
 ]
 discord = [
     {file = "discord-1.0.1-py3-none-any.whl", hash = "sha256:9d4debb4a37845543bd4b92cb195bc53a302797333e768e70344222857ff1559"},

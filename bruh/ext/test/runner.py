@@ -48,7 +48,7 @@ async def run_all_events():
     """
         Ensure that all dpy related coroutines have completed or been cancelled
     """
-    print("run_all_events called")
+    # print("run_all_events called")
     while True:
         if sys.version_info[1] >= 7:
             pending = asyncio.all_tasks()
@@ -56,17 +56,17 @@ async def run_all_events():
             pending = asyncio.Task.all_tasks()
         if not any(map(lambda x: x._coro.__name__ == "_run_event" and not (x.done() or x.cancelled()) , pending)):
             break
-        print("e")
+        # print("e")
         for task in pending:
-            print(59)
+            # print(59)
             if task._coro.__name__ == "_run_event" and not (task.done() or task.cancelled()):
-                print(60)
-                print("task is", task)
+                # print(60)
+                # print("task is", task)
                 await task
                 # loop = asyncio.get_event_loop()
                 # loop.run_until_complete(task)
                 # loop.close()
-                print(61)
+                # print(61)
 
 
 
@@ -281,10 +281,10 @@ async def message(content, channel=0, member=0):
     # print("_cur_config.members is", _cur_config.members)
     # print("in require_config.message member is", member)
     mes = back.make_message(content, member, channel)
-    print("before run_all_events")
+    # print("before run_all_events")
     await run_all_events()
     #await 
-    print(" after run_all_events")
+    # print(" after run_all_events")
 
     if not error_queue.empty():
         err = await error_queue.get()
