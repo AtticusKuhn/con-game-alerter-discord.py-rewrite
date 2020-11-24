@@ -10,9 +10,9 @@ sys.setrecursionlimit(10**6)
 intents = discord.Intents.default()
 intents.members = True
 def get_prefix(client, message):
-    prefixes = [CONFIG.prefix, "!com "]    # sets the prefixes, u can keep it as an array of only 1 item if you need only one prefix
+    prefixes = [CONFIG.prefix]# sets the prefixes, u can keep it as an array of only 1 item if you need only one prefix
     return commands.when_mentioned_or(*prefixes)(client, message)    # Allow users to @mention the bot instead of using a prefix when using a command.
-async def make_bot_2():
+async def make_bot():
     bot = commands.Bot(        # Create a new bot                                     
         command_prefix=get_prefix,                              # Set the prefix
         description='A bot used for conflict of nations',                  # Set a description for the bot
@@ -31,7 +31,7 @@ async def make_bot_2():
         self.log  =self.log[:1000]
     bot.test=False
     commands.Bot.print = _print
-    print("ready bot")
+    # print("ready bot")
     await ready(bot)
     @bot.event
     async def on_command(ctx):

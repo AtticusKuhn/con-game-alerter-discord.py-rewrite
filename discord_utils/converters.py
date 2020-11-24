@@ -6,7 +6,6 @@ from discord.ext.commands import BadArgument
 
 class FormatConverter(commands.Converter):
     async def convert(self, ctx, *input_format):
-        print("input was", input_format)
         input_format= " ".join(input_format)
         parsed_format=methods.parse_format(input_format)
         print("parsed format is",parsed_format )

@@ -262,8 +262,11 @@ async def update_room_permissions(guild, coach):
                 if person.id == coach.id:
                     continue
                 elif int(person.id) == 698691997279584338 or int(person.id) ==464954455029317633:
-                    await channel.set_permissions(person, read_messages=True)
-                    await channel.set_permissions(person, send_messages=True)
+                    try:
+                        await channel.set_permissions(person, read_messages=True)
+                        await channel.set_permissions(person, send_messages=True)
+                    except:
+                        pass
                     continue
                 elif person in  coaches[str(coach.id)]["team"]:
                     continue

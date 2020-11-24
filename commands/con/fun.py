@@ -34,6 +34,7 @@ class Fun(commands.Cog):
         usage="me"
     )
     async def meme(self, ctx):
+        print(random_line(open("data/memes.txt")))
         return await ctx.send(embed=embeds.simple_embed(True, "want to submit your own conflict of nations meme? DM eulerthedestroyer#2074 and he will put it in the CoN meme collection.", random_line(open("data/memes.txt")) ))
     @commands.command(
         name='quiz',

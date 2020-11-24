@@ -1,11 +1,7 @@
 from discord.ext import commands
-import json
-
+from api.youtube_api import search_video
 import discord_utils.embeds as embeds
-from methods import seconds_to_time, parse_costs
-import requests
-import os
-API_KEY = os.environ.get('YOUTUBE_API_KEY')
+
 class Video(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -17,7 +13,9 @@ class Video(commands.Cog):
     )       
     async def video(self, ctx, *, keyword):
         TheB2 = "UCglLeRRcX8Jnb-dh2pijZyQ"
-        result = requests.get(f'https://www.googleapis.com/youtube/v3/search?part=snippet&channelId={TheB2}&maxResults=1&q={keyword}&key={API_KEY}').json()
-        return await ctx.send(f'https://youtu.be/{result["items"][0]["id"]["videoId"]}')
+        result = await search_video(TheB2, keyword)
+        if not result["success"]:
+            return await ctx.send(embed=embeds.simple_embed(False, result["message"]))
+        return await ctx.send(f'https://youtu.be/{result["message"]}')
 def setup(bot):
     bot.add_cog(Video(bot))

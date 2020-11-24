@@ -3,7 +3,7 @@ from datetime import datetime
 
 import discord_utils.embeds as embeds
 import discord_utils.converters as converters
-from scraper.request_game import get_global_games
+from api.con_api import get_global_games
 import methods
 
 class Global(commands.Cog):
@@ -47,6 +47,7 @@ class Global(commands.Cog):
     async def game(self, ctx, sort="newest", *, format:converters.FormatConverter="all"):
         result = await get_global_games()
         games = result["result"]["games"]
+        # append_string =""
         if format != "all":
             print("format is ", format)
             games =list(filter(lambda game:game["properties"]["title"]==format, games))
@@ -61,7 +62,9 @@ class Global(commands.Cog):
         game=sorted_games[0]["properties"]
         reply = game["gameID"]
         ts = int(game["startofgame2"])
-        await ctx.send(embed=embeds.simple_embed(True,f'Game {reply} has just started at time {datetime.utcfromtimestamp(ts).strftime("%Y-%m-%d %H:%M:%S")}. It is at {int(game["nrofplayers"])-int(game["openSlots"])}/{game["nrofplayers"]} You can join it by going to https://www.conflictnations.com/play.php?bust=1&gameID={reply}'))
+        await ctx.send(embed=embeds.simple_embed(True,
+        f'Game {reply} has just started at time {datetime.utcfromtimestamp(ts).strftime("%Y-%m-%d %H:%M:%S")} . It is at {int(game["nrofplayers"])-int(game["openSlots"])}/{game["nrofplayers"]} You can join it by going to https://www.conflictnations.com/play.php?bust=1&gameID={reply} type !con gpl {game["gameID"]} to get the players in the game and !con format {game["title"]} to see the format'
+        ))
         
 def setup(bot):
     bot.add_cog(Global(bot))

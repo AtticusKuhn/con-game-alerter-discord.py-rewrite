@@ -11,11 +11,7 @@ from datetime import datetime as d
 import discord
 import os
 import traceback
-import pytest
-import os
-from unit_tests.test import run_tests
-import asyncio
-#os.system("pip install pytest-asyncio")
+
 async def is_owner(ctx):
     return ctx.author.id == 464954455029317633
 class Admin(commands.Cog):
@@ -54,19 +50,18 @@ class Admin(commands.Cog):
         name='server',
         description='get info on a server this bot is in',
         aliases=['guild'],
-        usage="servers"
+        usage="server"
     )
-    async def server(self, ctx, *, server):
+    async def server(self, ctx, *, server=None):
+        if server == None:
+            server = ctx.guild.name
         if ctx.author.id !=464954455029317633:
             return await ctx.send(embed=embeds.simple_embed(False, "only eulerthedestroyer#2074 can use admin commands"))
         found_server= False
-        activeservers = self.bot.guilds
-        for guild in activeservers: 
-            if guild.name == server:
-                found_server=guild
-                break
-        if not found_server:
+        found_server = [guild for guild in self.bot.guilds if guild.name == server]
+        if len(found_server)==0:
             return await ctx.send(embed=embeds.simple_embed(False, "can't find server"))
+        found_server = found_server[0]
         ret_dict = {}
         ret_dict["members"] = list(map(lambda x: x.name, found_server.members))
         for channel in found_server.channels:
@@ -97,6 +92,7 @@ class Admin(commands.Cog):
         ret_dict["Commands responded"] = self.bot.commands_responded
         ret_dict["errors"] = self.bot.command_errors
         ret_dict["servers"] = len(self.bot.guilds)
+        ret_dict["unit tests"] = self.bot.tests
         ret_dict["latency"] = "pinging...."
         msg = await ctx.send(embed=embeds.dict_to_embed(ret_dict ))
         ret_dict["latency"] =f'{math.floor((d.timestamp(d.now())-start) * 1000)} ms'
@@ -117,16 +113,7 @@ class Admin(commands.Cog):
         elif code.startswith("```") and code.endswith("```"):
             code=code[3:-3]
         print("final code is ", code)
-        def fake_print(message):
-            print("fakeprint called")
-            if "output" in exec_dict:
-                exec_dict["output"]+= f'{message}\n'
-            else:
-                exec_dict["output"] = message
-            #try:
-            #    output +=f'{message}\n'
-            #except:
-            #    output = f'{message}\n'
+ 
         exec_dict = {
             "bot":self.bot,
             "self":self,
@@ -134,14 +121,17 @@ class Admin(commands.Cog):
             "code":code,
             "discord":discord,
             "time":time,
-            "print":fake_print,
+            # "print":fake_print,
             "os":os,
             "methods":__import__("methods")
         }
         async def aexec(code, context):
             exec_code=f'async def __ex(): ' +''.join(f'\n {l}' for l in code.split('\n')
             )+'''\n if "output" in locals():\n  return output'''
-            #print(exec_code,"exec_code")
+            def fake_print(message):
+                print("fakeprint called")
+                context["output"] = message
+            context["print"] = fake_print
             try:    
                 exec(
                     exec_code
@@ -178,25 +168,11 @@ class Admin(commands.Cog):
     async def speak(self, ctx, *, message):
         if ctx.author.id !=464954455029317633:
             return await ctx.send(embed=embeds.simple_embed(False, "only eulerthedestroyer#2074 can use admin commands"))
-        await ctx.send(message)
-        await ctx.message.delete()
-
-    @commands.command(
-        name='tests',
-        description='run unit tests',
-        usage="test",
-        aliases=["unit_tests"]
-    )
-    async def tests(self, ctx):
-        if ctx.author.id !=464954455029317633:
-            return await ctx.send(embed=embeds.simple_embed(False, "only eulerthedestroyer#2074 can use admin commands"))
-        # test_results = await run_tests()
-        asyncio.run(run_tests())
-        print("test_results",test_results)
-        await ctx.send(embed=embeds.simple_embed(True,
-         ",\n".join(
-             list(map(lambda test: f'{":white_check_mark: " if test["success"] else ":x: "}{test["name"]} - {test["success"]} {test["comment"] if not test["success"] else ""}', test_results))
-         )))
-        return
+        m = await ctx.send(message)
+        #await m.delete()
+        try:
+            await ctx.message.delete()
+        except:
+            pass
 def setup(bot):
     bot.add_cog(Admin(bot))

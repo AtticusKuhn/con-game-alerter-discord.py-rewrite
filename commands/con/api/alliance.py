@@ -3,7 +3,7 @@ from discord.ext import commands
 #import time
 
 import discord_utils.embeds as embeds
-from scraper.request_game import get_alliance
+from api.con_api import get_alliance
 
 class Alliance(commands.Cog):
     def __init__(self, bot):

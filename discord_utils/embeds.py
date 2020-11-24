@@ -19,7 +19,8 @@ def simple_embed(success,message, image = None):
     )
     embedVar.set_footer(text="A general purpose CoN bot", icon_url=CONFIG.image)
     if image is not None:
-        embedVar.set_image(url=image)
+        embedVar.set_image(url=image.strip())
+        # embedVar.image = embedVar.image
     return embedVar
 def dict_to_embed(dict, image=None):
     embedVar = discord.Embed(
@@ -31,7 +32,7 @@ def dict_to_embed(dict, image=None):
         if value == None or value=="":
             value="(none)"
         elif  type(value) == list:
-            value = ",\n".join(value)
+            value = ",\n".join([str(x) for x in value[:20]]) + (f'\n{len(value)-20} more...' if len(value) > 20 else "")
         elif  type(value).__name__== "dict":
             ret_string=""
             for key1, value1 in value.items():
@@ -43,8 +44,8 @@ def dict_to_embed(dict, image=None):
             value+="\u200b"
         if len(value) > 1000:
             value = value[:1000]+"..."
-        embedVar.add_field(name=key, value= value)
+        embedVar.add_field(name=key, value=value)
     embedVar.set_footer(text="A general purpose CoN bot", icon_url=CONFIG.image)
     if image is not None:
-        embedVar.set_image(url=image)
+        embedVar.set_image(url=str(image).strip())
     return embedVar

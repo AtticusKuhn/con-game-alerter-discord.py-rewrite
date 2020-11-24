@@ -1,13 +1,12 @@
 from discord.ext import commands
-# Import the keep alive file
 import keep_alive
 import os
-import bruh.ext.test as dpytest
 import replit
 ##events
 from events.error import command_error
 from events.ready import ready
 from events.command import command
+from events.message import message
 from data.config import CONFIG
 import sys 
 sys.setrecursionlimit(10**6) 
@@ -50,13 +49,17 @@ async def on_ready():
 async def on_command(ctx):
     await command(bot,ctx)
 @bot.event
+async def on_message(ctx):
+    await message(bot,ctx)
+@bot.event
 async def on_command_error(ctx,error):
     await command_error(bot, ctx, error)
 
 keep_alive.keep_alive()# Start the server
 
 replit.clear()
-asyncio.run(run_tests())
+bot.tests = asyncio.run(run_tests())
+bot.print(bot.tests)
 token = os.environ.get('DISCORD_BOT_SECRET')
 bot.run(token)# Finally, login the bot
 

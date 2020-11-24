@@ -25,6 +25,7 @@ class Basic(commands.Cog):
     )
     async def help(self, ctx, cog=""):
         # print("help called with cog", cog)
+        sep_char = ", " if "-compress" in ctx.message.flags else ",\n"
         if cog=="":
             return_dict = {}
             for command in self.bot.commands:
@@ -32,9 +33,9 @@ class Basic(commands.Cog):
                 if not name in return_dict:
                     return_dict[name] = ""
                 if ctx.message.content == f'{CONFIG.prefix} h':
-                    return_dict[name] += f'{", ".join(command.aliases)},\n'
+                    return_dict[name] += f'{", ".join(command.aliases)}{sep_char}'
                 else:
-                    return_dict[name] += f'{str(command)},\n'
+                    return_dict[name] += f'{str(command)}{sep_char}'
             for command in return_dict:
                 return_dict[command]= return_dict[command][:-2]
             return_dict["helpful tips"] = '\n remember that to see commands relating to a specific module, you can do help {module name}. \n also to get info on a command do info {command name}'
@@ -61,7 +62,7 @@ class Basic(commands.Cog):
         command = [c for c in self.bot.commands if c.name==command_name or command_name in c.aliases]
         if len(command)>0:
             command=command[0]
-            filtered_dict = {k: v for k, v in command.__dict__.items() if not k.startswith('_')}
+            filtered_dict = {k: v for k, v in command.__dict__.items() if not k.startswith('_') and k not in ["params","cog"]}
             return await ctx.send(embed=dict_to_embed(filtered_dict))
             # return await ctx.send(embed=simple_embed(True,f'name: {command.name}\n description:{command.description}\n aliases:{", ".join(command.aliases)}\n {"usage: "+command.usage if command.usage is not None else ""}'))
         return await ctx.send(embed=simple_embed(False,"can't find command"))

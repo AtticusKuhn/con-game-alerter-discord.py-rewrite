@@ -19,12 +19,10 @@ async def command_error(bot, ctx, error):
         for command in bot.commands:
             test_distance = distance(command.name, false_command)
             if  test_distance< dis:
-                #print(f'distance from {command.name} to {false_command} is {test_distance}')
                 dis= test_distance
                 current_command= command.name
             for alias in command.aliases:
                 test_distance = distance(alias, false_command)
-                #print(f'distance from {alias} to {false_command} is {test_distance}')
                 if  test_distance< dis:
                     dis= test_distance
                     current_command= alias

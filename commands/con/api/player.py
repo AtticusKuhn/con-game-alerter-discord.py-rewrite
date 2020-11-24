@@ -1,7 +1,7 @@
 from discord.ext import commands
 
 import discord_utils.embeds as embeds
-from scraper.request_game import get_player_ranking
+from api.con_api import get_player_ranking
 
 class Player(commands.Cog):
     def __init__(self, bot):
@@ -27,6 +27,6 @@ class Player(commands.Cog):
         if "alliance" in result["result"]:
             ranking.update({"Alliance":result["result"]["alliance"]["properties"]["name"]})
         return await ctx.send(embed=embeds.dict_to_embed(ranking))
-        
+
 def setup(bot):
     bot.add_cog(Player(bot))
