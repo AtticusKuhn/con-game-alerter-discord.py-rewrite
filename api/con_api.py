@@ -1,17 +1,15 @@
 import json
-#import asyncio
 from hashlib import sha1
 import os
-import urllib
 import requests
 import base64
+
 auth_code=os.environ.get('AUTH_CODE')
-authTstamp="1605630054"
+authTstamp="1609519786"
 auth_user_id = "19999486"
 
 async def make_con_api_request(action, **kwargs):
     url_string = "&".join(list(map(lambda x: f'{x[0]}={x[1]}', kwargs.items())))
-    # print("url_string", url_string)
     hash_code=sha1(f'uberCon{action}{url_string}&authTstamp={authTstamp}&authUserID={auth_user_id}{auth_code}'.encode('utf-8')).hexdigest()
     url = f'https://www.conflictnations.com/index.php?eID=api&key=uberCon&action={action}&hash={hash_code}&outputFormat=json&apiVersion=20141208'
     data = {
@@ -29,12 +27,14 @@ async def request_game(game_number:int):
         congs_number= result["result"]["detailMessage"]
         data='{"requestID":0,"@c":"ultshared.action.UltUpdateGameStateAction","stateType":0,"stateID":"0","addStateIDsOnSent":true,"option":null,"actions":null,"lastCallDuration":0,"version":0,"tstamp":"0","client":"con-client","hash":"0","sessionTstamp":0,"gameID":"'+str(game_number)+'","playerID":"0","siteUserID":"0","adminLevel":null,"rights":"chat","userAuth":"0"}:'
         new_url =f'https://{congs_number}/'
-        print(new_url)
-        request = requests.post(new_url, data, stream=True)
+        # print(new_url)
+        request = requests.post(new_url, data)
         request.encoding = 'utf-8' 
-        result =r.json() 
-    except:
+        result =request.json() 
+    except Exception as e:
+        # print("e is",e)
         pass
+    # print("result is", result)
     result=result["result"]["states"]["1"]
     return result
 

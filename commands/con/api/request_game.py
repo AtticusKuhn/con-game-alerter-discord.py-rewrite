@@ -22,7 +22,8 @@ class Request_game(commands.Cog):
         del players["@c"]
         found=False
         for number, player in players.items():
-            if player["name"] == country or player["nationName"]==country:
+            # print("player is", player)
+            if player["name"] == country or ("nationName" in player and player["nationName"]==country):
                 found=True
                 break
         if not found:
@@ -43,7 +44,7 @@ class Request_game(commands.Cog):
                     start_date = time.time()-excess_time
                     player["lastLogin"] = start_date+excess_time
                 player["lastLogin"] = datetime.fromtimestamp(player["lastLogin"]).strftime('%Y-%m-%d %H:%M:%S')
-        return await ctx.send(embed=embeds.dict_to_embed(player,f'https://www.conflictnations.com/clients/con-client/con-client_live/images/flags/countryFlagsByName/big_{player["nationName"].lower().replace(" ","_")}.png?'))
+        return await ctx.send(embed=embeds.dict_to_embed(player,f'https://www.conflictnations.com/clients/con-client/con-client_live/images/flags/countryFlagsByName/big_{player["nation name"].lower().replace(" ","_")}.png?'))
     @commands.command(
         name='game_players',
         description='see which players have joined a game',
@@ -52,10 +53,10 @@ class Request_game(commands.Cog):
     )
     async def game_players(self, ctx, game_id:int):
         result = await get_players_in_game(game_id)
-        print(result)
+        sep_char  = " " if ("-compress" in ctx.message.flags) else ",\n"
         if len(result["result"])==0:
             return await ctx.send(embed=embeds.simple_embed(False, "could not find game"))
-        formatted= f'found {len(result["result"]["logins"])} players \n'+ ",\n".join(list(map( lambda x: x["login"],result["result"]["logins"])))
+        formatted= f'found {len(result["result"]["logins"])} players \n'+ sep_char.join(list(map( lambda x: x["login"],result["result"]["logins"])))
         return await ctx.send(embed=embeds.simple_embed(True, formatted))
 def setup(bot):
     bot.add_cog(Request_game(bot))

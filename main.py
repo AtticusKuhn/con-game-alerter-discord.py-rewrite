@@ -55,12 +55,11 @@ async def on_message(ctx):
 async def on_command_error(ctx,error):
     await command_error(bot, ctx, error)
 
-keep_alive.keep_alive()# Start the server
 
+keep_alive.keep_alive()# Start the server
 replit.clear()
 bot.tests = asyncio.run(run_tests())
 bot.print(bot.tests)
-token = os.environ.get('DISCORD_BOT_SECRET')
-bot.run(token)# Finally, login the bot
+bot.run(os.environ.get('DISCORD_BOT_SECRET'), bot=True, reconnect=True)# Finally, login the bo
 
  

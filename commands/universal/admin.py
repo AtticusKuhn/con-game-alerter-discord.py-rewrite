@@ -174,5 +174,20 @@ class Admin(commands.Cog):
             await ctx.message.delete()
         except:
             pass
+    @commands.command(
+        name='leave_server',
+        aliases=["leave-server", "le-se"],
+        description='leave a guild',
+        usage="leave servername"
+    )
+    async def leave(self, ctx, *, server):
+        if ctx.author.id !=464954455029317633:
+            return await ctx.send(embed=embeds.simple_embed(False, "only eulerthedestroyer#2074 can use admin commands"))
+        found_server = [guild for guild in self.bot.guilds if guild.name == server]
+        if len(found_server)==0:
+            return await ctx.send(embed=embeds.simple_embed(False, "can't find server"))
+        await found_server[0].leave()
+        return await ctx.send(embed=embeds.simple_embed(True, "success"))
+
 def setup(bot):
     bot.add_cog(Admin(bot))

@@ -47,7 +47,7 @@ class Fun(commands.Cog):
             "identify unit image",
             "identify unit description",
             "identify country flag"
-        ]) ##random.choice(["identify unit image", "identify building", , "identify country description"])
+        ]) 
         answer_type = random.choice(["open response", "multiple choice"])
         if quiz_type == "identify unit image":
             with open('data/units.json') as json_file:
