@@ -55,10 +55,24 @@ pre_test = Test(
     name="does the previous command (repeat previously said command) work?",
     run=previous
 )
+from api.con_api import request_game
+async def req_game():
+    some_random_game_id = (await get_global_games())["result"]["games"][0]["properties"]["gameID"]
+    game = await request_game(some_random_game_id)
+    return {
+        "success":True,
+        "comment":game
+    }
+req_game_test = Test(
+    name="does requesting the data of a specific game work?",
+    run=req_game
+)
+
 tests = [
     help_test,
     admin_test,
     global_games_test,
     command_player_test,
-    pre_test
+    pre_test,
+    req_game_test
 ]

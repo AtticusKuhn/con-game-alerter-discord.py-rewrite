@@ -15,17 +15,24 @@ async def make_con_api_request(action, **kwargs):
     data = {
         "data": base64.b64encode(f'{url_string}&authTstamp={authTstamp}&authUserID={auth_user_id}'.encode('ascii'))
     }
-    result = requests.post(url, data).json()
+    r = requests.post(url, data)
+    r.encoding = "utf-8"
+    result = r.json()
     return result
-async def request_game(game_number:int):
+
+    ##{"requestID":7,"@c":"ultshared.action.UltUpdateGameStateAction","stateType":0,"stateID":"0","addStateIDsOnSent":true,"option":null,"actions":null,"lastCallDuration":8903,"version":78,"autoPolling":true,"stateIDs":{"1":"214614529","2":"154030604663574583","3":"2199854588340","4":"-1303479959","5":"-1424254260249347878","6":"-31990256649","7":"32","11":"-1596266382","12":"-1578923503","13":"533","14":"-1838379474","15":"0","16":"7795040645521","19":"60","23":"1609637749","24":"1609616335851","25":"-1619996831","28":"1","@c":"java.util.HashMap"},"tstamps":{"3":"1609616565803","6":"1609616565803","@c":"java.util.HashMap"},"tstamp":"1609616561","client":"con-client","hash":"2908b3aaaf3eddeba80b35f2a3dd9aa220b6f1a8","sessionTstamp":0,"gameID":"3657030","playerID":29,"siteUserID":"19999486","adminLevel":null,"rights":"chat","userAuth":"ac6de37f35ceda392ad979b2ca0efba160d212bd"}: 
+async def in_game_req(request_id:int,game_number:int, options={}):
     congs_number= "https://congs1.supremacy1914.com/"
-    data='{"requestID":0,"@c":"ultshared.action.UltUpdateGameStateAction","stateType":0,"stateID":"0","addStateIDsOnSent":true,"option":null,"actions":null,"lastCallDuration":0,"version":0,"tstamp":"0","client":"con-client","hash":"0","sessionTstamp":0,"gameID":"'+str(game_number)+'","playerID":"0","siteUserID":"0","adminLevel":null,"rights":"chat","userAuth":"0"}:'
+    dataJson={"requestID":+request_id,"@c":"ultshared.action.UltUpdateGameStateAction","stateType":0,"stateID":"0","addStateIDsOnSent":True,"option":None,"actions":None,"lastCallDuration":0,"version":0,"tstamp":"0","client":"con-client","hash":"0","sessionTstamp":0,"gameID":str(game_number),"playerID":"0","siteUserID":"0","adminLevel":None,"rights":"chat","userAuth":"0"}
+    dataJson.update(options)
+    data = json.dumps(dataJson)+":"
+    print("data is",data)
     r = requests.post(congs_number, data)
     r.encoding = 'utf-8' 
     result =  r.json()
     try:
         congs_number= result["result"]["detailMessage"]
-        data='{"requestID":0,"@c":"ultshared.action.UltUpdateGameStateAction","stateType":0,"stateID":"0","addStateIDsOnSent":true,"option":null,"actions":null,"lastCallDuration":0,"version":0,"tstamp":"0","client":"con-client","hash":"0","sessionTstamp":0,"gameID":"'+str(game_number)+'","playerID":"0","siteUserID":"0","adminLevel":null,"rights":"chat","userAuth":"0"}:'
+        # data='{"requestID":0,"@c":"ultshared.action.UltUpdateGameStateAction","stateType":0,"stateID":"0","addStateIDsOnSent":true,"option":null,"actions":null,"lastCallDuration":0,"version":0,"tstamp":"0","client":"con-client","hash":"0","sessionTstamp":0,"gameID":"'+str(game_number)+'","playerID":"0","siteUserID":"0","adminLevel":null,"rights":"chat","userAuth":"0"}:'
         new_url =f'https://{congs_number}/'
         # print(new_url)
         request = requests.post(new_url, data)
@@ -35,8 +42,42 @@ async def request_game(game_number:int):
         # print("e is",e)
         pass
     # print("result is", result)
-    result=result["result"]["states"]["1"]
+    try:
+        result=result["result"]["states"]
+    except:
+        print("result", result)
+        raise Exception("bruh in_game req failed")
+
+    # print("going to return", result)
     return result
+async def game_news(game_number:int):
+    req = await in_game_req(7, game_number,{
+        "stateIDs":{},
+        "autoPolling": True,
+    })
+    return req
+async def request_game(game_number:int):
+    req = await in_game_req(0, game_number)
+    return req["1"]
+    # congs_number= "https://congs1.supremacy1914.com/"
+    # data='{"requestID":0,"@c":"ultshared.action.UltUpdateGameStateAction","stateType":0,"stateID":"0","addStateIDsOnSent":true,"option":null,"actions":null,"lastCallDuration":0,"version":0,"tstamp":"0","client":"con-client","hash":"0","sessionTstamp":0,"gameID":"'+str(game_number)+'","playerID":"0","siteUserID":"0","adminLevel":null,"rights":"chat","userAuth":"0"}:'
+    # r = requests.post(congs_number, data)
+    # r.encoding = 'utf-8' 
+    # result =  r.json()
+    # try:
+    #     congs_number= result["result"]["detailMessage"]
+    #     data='{"requestID":0,"@c":"ultshared.action.UltUpdateGameStateAction","stateType":0,"stateID":"0","addStateIDsOnSent":true,"option":null,"actions":null,"lastCallDuration":0,"version":0,"tstamp":"0","client":"con-client","hash":"0","sessionTstamp":0,"gameID":"'+str(game_number)+'","playerID":"0","siteUserID":"0","adminLevel":null,"rights":"chat","userAuth":"0"}:'
+    #     new_url =f'https://{congs_number}/'
+    #     # print(new_url)
+    #     request = requests.post(new_url, data)
+    #     request.encoding = 'utf-8' 
+    #     result =request.json() 
+    # except Exception as e:
+    #     # print("e is",e)
+    #     pass
+    # # print("result is", result)
+    # result=result["result"]["states"]["1"]
+    # return result
 
 async def get_player_ranking(player_name):
     result = await make_con_api_request("searchUser",

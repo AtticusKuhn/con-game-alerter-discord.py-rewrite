@@ -5,6 +5,7 @@ from termcolor import colored
 from unit_tests.generate_tests import tests
 
 async def run_tests():
+    # return
     bot = await make_bot()
     dpytest.configure(bot)
     results =[await test.run()  for test in tests]
