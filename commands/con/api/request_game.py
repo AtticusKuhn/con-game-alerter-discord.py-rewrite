@@ -2,7 +2,7 @@ from discord.ext import commands
 from datetime import datetime
 import time
 import json
-
+import re
 import discord_utils.embeds as embeds
 from api.con_api import request_game, get_players_in_game, game_news
 
@@ -15,7 +15,7 @@ class Request_game(commands.Cog):
         aliases=['infc', "info_country", "act", "online", "last_login"],
         usage="infc 3320203 Sweden"
     )
-    async def info_country(self, ctx, game_id:int,country):
+    async def info_country(self, ctx, game_id:int,*,country):
         result = await request_game(game_id)
         if "players" not in result:
             return await ctx.send(embed=embeds.simple_embed(False,"cannot find that id")) 
@@ -28,7 +28,7 @@ class Request_game(commands.Cog):
                 found=True
                 break
         if not found:
-            return await ctx.send(embed=embeds.simple_embed(False,"cannot find that country"))
+            return await ctx.send(embed=embeds.simple_embed(False,f'cannot find that country {country}'))
         player =  {
             "nation name":player["nationName"],
             "computer player":player["computerPlayer"],
@@ -82,7 +82,17 @@ class Request_game(commands.Cog):
     )
     async def get_game_news(self, ctx, game_id:int):
         game= await game_news(game_id)
-        print("game", game)
-        return "success"
+        articles = game["2"]["articles"][1]
+        # print("game", game)
+        # with open("a.txt", "w") articles}", file=text_file)
+        news = list(filter(lambda a : a["@c"]=='ultshared.UltArticle',articles))
+        titles = list(map(lambda a: a["title"], news))
+        bodies = list(map(lambda a:a["messageBody"], news))
+        replace_links_regex =  re.compile(r'\{\{\{\s*[^\}\s]*\s([^\}]*)\}\}\}')
+        replace_html_regex =re.compile(r'<.*?>')
+        formatted_bodies= list(map(lambda a:replace_html_regex.sub('',replace_links_regex.sub(r'\1', a)), bodies))
+        formatted_titles= list(map(lambda a:replace_links_regex.sub(r'\1', a), titles))
+        my_dict = dict(zip(formatted_titles, formatted_bodies))
+        return await ctx.send(embed=embeds.dict_to_embed(my_dict))
 def setup(bot):
     bot.add_cog(Request_game(bot))
