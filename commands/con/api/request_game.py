@@ -4,7 +4,8 @@ import time
 import json
 import re
 import discord_utils.embeds as embeds
-from api.con_api import request_game, get_players_in_game, game_news
+from api.con_api import request_game, get_players_in_game, game_news, armies_test
+from pytz import timezone
 
 class Request_game(commands.Cog):
     def __init__(self, bot):
@@ -29,6 +30,7 @@ class Request_game(commands.Cog):
                 break
         if not found:
             return await ctx.send(embed=embeds.simple_embed(False,f'cannot find that country {country}'))
+        # print(player)
         player =  {
             "nation name":player["nationName"],
             "computer player":player["computerPlayer"],
@@ -37,14 +39,17 @@ class Request_game(commands.Cog):
             "is a golder?":player["premiumUser"],
             "activity":player["activityState"]
         }
-        if "lastLogin" in player:
-            if player["lastLogin"]!=0:
-                if( player["lastLogin"] > time.time()):
-                    excess_time = player["lastLogin"]-time.time()
-                    excess_time = excess_time/3
-                    start_date = time.time()-excess_time
-                    player["lastLogin"] = start_date+excess_time
-                player["lastLogin"] = datetime.fromtimestamp(player["lastLogin"]).strftime('%Y-%m-%d %H:%M:%S')
+        # print(player["lastLogin"], "login")
+        # print(ctx.message.flags["named"])
+        if "timezone" in ctx.message.flags["named"]:
+            # print("timezone")
+            #dt = datetime.fromtimestamp(ts, tz)
+            player["lastLogin"] = datetime.fromtimestamp(player["lastLogin"]/1000, timezone(ctx.message.flags["named"]["timezone"])).strftime('%Y-%m-%d %H:%M:%S')
+        else:
+            # print("no timezone")
+            player["lastLogin"] = datetime.fromtimestamp(player["lastLogin"]/1000).strftime('%Y-%m-%d %H:%M:%S')
+        # print(player["lastLogin"], "login")
+
         return await ctx.send(embed=embeds.dict_to_embed(player,f'https://www.conflictnations.com/clients/con-client/con-client_live/images/flags/countryFlagsByName/big_{player["nation name"].lower().replace(" ","_")}.png?'))
     @commands.command(
         name='game_players',
@@ -54,7 +59,7 @@ class Request_game(commands.Cog):
     )
     async def game_players(self, ctx, game_id:int):
         result = await get_players_in_game(game_id)
-        sep_char  = " " if ("-compress" in ctx.message.flags) else ",\n"
+        sep_char  = " " if ("-compress" in ctx.message.flags["unnamed"]) else ",\n"
         if len(result["result"])==0:
             return await ctx.send(embed=embeds.simple_embed(False, "could not find game"))
         formatted= f'found {len(result["result"]["logins"])} players \n'+ sep_char.join(list(map( lambda x: x["login"],result["result"]["logins"])))
@@ -82,9 +87,7 @@ class Request_game(commands.Cog):
     )
     async def get_game_news(self, ctx, game_id:int):
         game= await game_news(game_id)
-        articles = game["2"]["articles"][1]
-        # print("game", game)
-        # with open("a.txt", "w") articles}", file=text_file)
+        articles = game["articles"][1]
         news = list(filter(lambda a : a["@c"]=='ultshared.UltArticle',articles))
         titles = list(map(lambda a: a["title"], news))
         bodies = list(map(lambda a:a["messageBody"], news))
@@ -94,5 +97,15 @@ class Request_game(commands.Cog):
         formatted_titles= list(map(lambda a:replace_links_regex.sub(r'\1', a), titles))
         my_dict = dict(zip(formatted_titles, formatted_bodies))
         return await ctx.send(embed=embeds.dict_to_embed(my_dict))
+    @commands.command(
+        name='seearmies',
+        description='get news of game',
+        aliases=["sa"],
+        usage="sa 3320203"
+    )
+    async def armies(self, ctx, game_id:int):
+        game = await armies_test(game_id)
+        print(game)
+        return await ctx.send("e")
 def setup(bot):
     bot.add_cog(Request_game(bot))

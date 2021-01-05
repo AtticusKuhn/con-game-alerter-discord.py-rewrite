@@ -25,7 +25,7 @@ class Basic(commands.Cog):
     )
     async def help(self, ctx, cog=""):
         # print("help called with cog", cog)
-        sep_char = ", " if "-compress" in ctx.message.flags else ",\n"
+        sep_char = ", " if "-compress" in ctx.message.flags["unnamed"] else ",\n"
         if cog=="":
             return_dict = {}
             for command in self.bot.commands:

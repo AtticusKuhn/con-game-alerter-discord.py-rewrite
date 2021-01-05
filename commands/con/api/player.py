@@ -19,6 +19,7 @@ class Player(commands.Cog):
             return await ctx.send(embed=embeds.simple_embed(False,"that is an invalid player name"))
         # print("player called")
         result = await get_player_ranking(player_name)
+        print(result, "result")
         # print("result", result["result"])
         if not result:
             return await ctx.send(embed=embeds.simple_embed(False,"can't find that player"))

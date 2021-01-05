@@ -33,7 +33,7 @@ async def make_con_api_request(action, **kwargs):
 async def in_game_req(request_id: int, game_number: int, options={}):
     congs_number = "https://congs1.supremacy1914.com/"
     dataJson = {
-        "requestID": +request_id,
+        "requestID": request_id,
         "@c": "ultshared.action.UltUpdateGameStateAction",
         "stateType": 0,
         "stateID": "0",
@@ -75,7 +75,7 @@ async def in_game_req(request_id: int, game_number: int, options={}):
     except:
         # print("data is", data)
         # print("result", result)
-        raise Exception("bruh in_game req failed")
+        raise Exception("con request failed (message euler if this is a problem for you).")
 
     # print("going to return", result)
     return result
@@ -93,12 +93,15 @@ async def game_news(game_number: int):
             },
             "tstamp": "0",
         })
-    return req
+    return req["2"]
 
 
 async def request_game(game_number: int):
     req = await in_game_req(0, game_number)
     return req["1"]
+async def armies_test(game_number:int):
+    req = await in_game_req(8, game_number)
+    return req["6"]
     # congs_number= "https://congs1.supremacy1914.com/"
     # data='{"requestID":0,"@c":"ultshared.action.UltUpdateGameStateAction","stateType":0,"stateID":"0","addStateIDsOnSent":true,"option":null,"actions":null,"lastCallDuration":0,"version":0,"tstamp":"0","client":"con-client","hash":"0","sessionTstamp":0,"gameID":"'+str(game_number)+'","playerID":"0","siteUserID":"0","adminLevel":null,"rights":"chat","userAuth":"0"}:'
     # r = requests.post(congs_number, data)
