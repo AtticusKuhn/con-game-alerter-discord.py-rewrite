@@ -6,7 +6,7 @@ import base64
 
 auth_code = os.environ.get(
     'AUTH_CODE')  ## this is essentially my sessionId or cookie I think
-authTstamp = "1609519786"
+authTstamp = "1618582090"
 auth_user_id = "19999486"
 
 

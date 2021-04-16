@@ -16,7 +16,7 @@ class Basic(commands.Cog):
         start = d.timestamp(d.now())
         msg = await ctx.send(embed=embeds.simple_embed(False,"pinging......"))
         await msg.edit(embed=embeds.simple_embed(True,f'Pong!\nOne message round-trip took {(d.timestamp(d.now())-start) * 1000}ms.'))
-        return
+        return True
     @commands.command(
         name='help',
         description='gives a list of possible commands',

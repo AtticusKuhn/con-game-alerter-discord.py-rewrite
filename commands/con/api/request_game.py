@@ -36,20 +36,21 @@ class Request_game(commands.Cog):
             "computer player":player["computerPlayer"],
             "lastLogin":player["lastLogin"],
             "defeated":player["defeated"],
-            "is a golder?":player["premiumUser"],
-            "activity":player["activityState"]
+            "has Security Council?":player["premiumUser"],
+            "is activity?":player["activityState"]
         }
-        # print(player["lastLogin"], "login")
-        # print(ctx.message.flags["named"])
+        player["lastLogin"] /= 1000
+        if player["lastLogin"]> time.time():## in 4x games time passes 4 times as fast so the time is inaccurate and must subtract to conteract the fast time
+            # print("game time is ahead, must account for 4x time")
+            excess_time = player["lastLogin"]-time.time()	                 
+            excess_time = excess_time/3               
+            start_date = time.time()-excess_time	          
+            player["lastLogin"] = start_date+excess_time
+            # print("after accounting for 4x, new")
         if "timezone" in ctx.message.flags["named"]:
-            # print("timezone")
-            #dt = datetime.fromtimestamp(ts, tz)
-            player["lastLogin"] = datetime.fromtimestamp(player["lastLogin"]/1000, timezone(ctx.message.flags["named"]["timezone"])).strftime('%Y-%m-%d %H:%M:%S')
+            player["lastLogin"] = datetime.fromtimestamp(player["lastLogin"], timezone(ctx.message.flags["named"]["timezone"])).strftime('%Y-%m-%d %H:%M:%S')
         else:
-            # print("no timezone")
-            player["lastLogin"] = datetime.fromtimestamp(player["lastLogin"]/1000).strftime('%Y-%m-%d %H:%M:%S')
-        # print(player["lastLogin"], "login")
-
+            player["lastLogin"] = datetime.fromtimestamp(player["lastLogin"]).strftime('%Y-%m-%d %H:%M:%S')
         return await ctx.send(embed=embeds.dict_to_embed(player,f'https://www.conflictnations.com/clients/con-client/con-client_live/images/flags/countryFlagsByName/big_{player["nation name"].lower().replace(" ","_")}.png?'))
     @commands.command(
         name='game_players',
@@ -77,6 +78,7 @@ class Request_game(commands.Cog):
         players = game["players"]
         del players["@c"]
         inactive_players = list(filter(lambda player: not player[1]["active"],players.items() ))
+        # inactive_players = sorted(inactive_players, key=lambda game: -int(game["properties"]["startofgame2"]) ) 
         formatted_players  = "\n".join(list(map(lambda player: f'{player[1]["nationName"]} - {player[1]["activityState"]}', inactive_players)))
         return await ctx.send(embed=embeds.simple_embed(True, "The following players are vunerable to attack\n"+formatted_players)) 
     @commands.command(

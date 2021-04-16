@@ -49,6 +49,9 @@ async def on_ready():
 async def on_command(ctx):
     await command(bot,ctx)
 @bot.event
+async def on_command_completion(ctx):
+    print(ctx)
+@bot.event
 async def on_message(ctx):
     await message(bot,ctx)
 @bot.event

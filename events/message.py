@@ -11,4 +11,17 @@ async def message(bot,message):
     message.content = re.sub(unnamed_flag_regex, "", message.content)
     # print(message.content)
 
-    await bot.process_commands(message)
+    e = await bot.process_commands(message)
+    # ctx = await bot.get_context(message)
+    # cmd = ctx.command
+    # if cmd is not None:
+        # ans = await cmd(ctx, *ctx.args)
+        # print(ans)
+    if e is not None:
+        print(e, "is e")
+    # c = await bot.get_context(message)
+    # # print("c is", c)
+    # attrs = vars(c)
+    # print(', '.join("%s: %s" % item for item in attrs.items()))
+    # e = await bot.invoke(c)
+    # print("e is ",e)

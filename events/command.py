@@ -1,4 +1,5 @@
 async def command(bot,ctx):
+    # print(bot, ctx)
     try:
         bot.commands_responded+=1
     except:

@@ -262,7 +262,7 @@ async def update_room_permissions(guild, coach):
                 if person.id == coach.id:
                     continue
                 elif int(person.id) == 698691997279584338 or int(person.id) ==464954455029317633:
-                    try:##random.choice(["identify unit image", "identify building", , "identify country description")
+                    try:
                         await channel.set_permissions(person, read_messages=True)
                         await channel.set_permissions(person, send_messages=True)
                     except:
@@ -275,7 +275,7 @@ async def update_room_permissions(guild, coach):
                         print("trying to deny",person.name,"access")
                         await channel.set_permissions(person, read_messages=True)
                         await channel.set_permissions(person, send_messages=False)
-                    except:
+                    except Exception as e:
                         pass
             for person in coaches[str(coach.id)]["team"]:
                 found_person = discord.utils.find(lambda m: str(m.id) == person, guild.members)
